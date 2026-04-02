@@ -195,7 +195,7 @@ export function LandingBookingStrip({ onBookingSearch }: Props) {
                       'min-h-[50px] bg-[#FFEDE5] text-[#C2410C] shadow-sm sm:min-h-[54px]',
                     elderActive &&
                       'min-h-[50px] bg-[#F0FAEF] text-[#1B5E20] shadow-sm sm:min-h-[54px]',
-                    pinkTabActive && 'min-h-[50px] bg-[#D53F8C] text-white shadow-sm sm:min-h-[54px]',
+                    pinkTabActive && 'min-h-[50px] bg-[#9D497E] text-white shadow-sm sm:min-h-[54px]',
                   )}
                 >
                   {tab.label}
@@ -615,7 +615,7 @@ export function LandingBookingStrip({ onBookingSearch }: Props) {
                           ? 'bg-[#FC5000] shadow-[0_10px_28px_rgba(252,80,0,0.38)] hover:bg-[#e04a00]'
                           : isElder
                             ? 'bg-[#2E7D32] shadow-[0_10px_28px_rgba(46,125,50,0.35)] hover:bg-[#1B5E20]'
-                            : 'bg-[#D53F8C] shadow-[0_10px_28px_rgba(213,63,140,0.35)] hover:bg-[#c43580]',
+                            : 'bg-[#9D497E] shadow-[0_10px_28px_rgba(157,73,126,0.35)] hover:bg-[#8a3e6f]',
                   )}
                 >
                   SEARCH NOW
