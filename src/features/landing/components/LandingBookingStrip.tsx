@@ -5,6 +5,7 @@ import {
   bookingServiceTabs,
   consultationModes,
   consultationSpecialties,
+  consultDoctorHeroCopy,
   doctorThemeHero,
   elderCareCategories,
   elderCaregiverTypes,
@@ -115,6 +116,7 @@ export function LandingBookingStrip({ onBookingSearch }: Props) {
   const [dateChoice, setDateChoice] = useState<'tomorrow' | 'today'>('tomorrow')
 
   const activeTabLabel = bookingServiceTabs[activeTab]?.label ?? ''
+  const isDoctorTab = activeTabLabel === 'Book Doctor'
   const isNurse = activeTabLabel === 'Book Nurse'
   const isLab = activeTabLabel === 'Lab Test'
   const isAmbulance = activeTabLabel === 'Ambulance'
@@ -147,66 +149,17 @@ export function LandingBookingStrip({ onBookingSearch }: Props) {
     return `${day}/${month}/${year}`
   }, [dateChoice])
 
+  function submitDoctorSearch() {
+    onBookingSearch?.({
+      kind: 'doctor',
+      specialty: selectedSpecialty,
+      consultationMode: selectedMode,
+    })
+  }
+
   return (
     <section className="relative w-full" aria-labelledby="booking-hero-headline">
-      {/* Figma hero: Doctor Theme.svg or Homecare Theme.svg (1440×538) + HTML text */}
-      <div className="relative mx-auto w-full max-w-[1440px] overflow-hidden">
-        <div className="relative aspect-[1440/538] w-full min-h-[220px]">
-          <img
-            src={heroBgSrc}
-            alt=""
-            width={1440}
-            height={538}
-            decoding="async"
-            fetchPriority="high"
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-top"
-            aria-hidden
-          />
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-4 py-6 text-center sm:px-8 sm:py-10">
-            <p
-              className={cn(
-                'font-script text-[clamp(1.25rem,3.5vw,1.75rem)] leading-tight sm:text-[clamp(1.5rem,4vw,2rem)]',
-                isNurse
-                  ? 'text-[#007d56]'
-                  : isLab
-                    ? 'text-[#A67C00]'
-                    : isAmbulance
-                      ? 'text-[#FC5000]'
-                      : isElder
-                        ? 'text-[#2E7D32]'
-                        : 'text-[#D53F8C]',
-              )}
-            >
-              {heroCopy.eyebrow}
-            </p>
-            <p
-              className={cn(
-                'mt-2 font-script text-[clamp(2rem,6.5vw,3.5rem)] leading-[1.05] drop-shadow-[0_1px_2px_rgba(255,255,255,0.6)] sm:mt-3',
-                isNurse
-                  ? 'text-[#007d56]'
-                  : isLab
-                    ? 'text-[#A67C00]'
-                    : isAmbulance
-                      ? 'text-[#FC5000]'
-                      : isElder
-                        ? 'text-[#2E7D32]'
-                        : 'text-[#D53F8C]',
-              )}
-            >
-              {heroCopy.scriptLine}
-            </p>
-            <h2
-              id="booking-hero-headline"
-              className="mx-auto mt-2 max-w-[46rem] font-display text-[clamp(0.72rem,1.85vw,1rem)] font-bold uppercase leading-snug tracking-[0.12em] text-[#1a1a1a] drop-shadow-[0_1px_2px_rgba(255,255,255,0.75)] sm:mt-3 sm:max-w-[52rem] sm:tracking-[0.16em] md:text-[clamp(0.85rem,1.6vw,1.15rem)]"
-            >
-              {heroCopy.headline}
-            </h2>
-          </div>
-        </div>
-      </div>
-
-      {/* Booking widget overlaps hero bottom */}
-      <div className="relative z-20 mx-auto max-w-[1280px] -mt-14 px-4 pb-10 sm:-mt-20 sm:px-6 sm:pb-12">
+      <div className="relative z-20 mx-auto max-w-[1280px] px-4 pb-10 sm:px-6 sm:pb-12">
         <div className="overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0_16px_48px_rgba(15,23,42,0.08)]">
           <div
             className="scrollbar-none flex items-end gap-1 overflow-x-auto border-b border-[#e8eaee] bg-[#ececec] px-2 pb-0 pt-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -250,6 +203,122 @@ export function LandingBookingStrip({ onBookingSearch }: Props) {
               )
             })}
           </div>
+
+          {isDoctorTab ? (
+            <div className="relative grid min-h-[240px] grid-cols-1 gap-6 bg-gradient-to-r from-[#4a2870] via-[#8e3b7a] to-[#e766a6] px-5 py-8 md:min-h-[280px] md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:gap-10 md:px-10 md:py-10">
+              <div className="relative flex min-h-[200px] items-center justify-center md:min-h-[260px]">
+                <span
+                  className="absolute left-0 top-[8%] z-10 rounded-full border border-white/45 bg-white/20 px-3 py-1.5 text-[10px] font-semibold text-white shadow-sm backdrop-blur-sm sm:left-[4%] sm:text-xs"
+                  style={{ transform: 'rotate(-6deg)' }}
+                >
+                  24/7 Support
+                </span>
+                <span
+                  className="absolute right-[5%] top-[18%] z-10 rounded-full border border-white/45 bg-white/20 px-3 py-1.5 text-[10px] font-semibold text-white shadow-sm backdrop-blur-sm sm:text-xs"
+                  style={{ transform: 'rotate(5deg)' }}
+                >
+                  Digital Prescription
+                </span>
+                <span
+                  className="absolute bottom-[12%] left-[8%] z-10 rounded-full border border-white/45 bg-white/20 px-3 py-1.5 text-[10px] font-semibold text-white shadow-sm backdrop-blur-sm sm:bottom-[15%] sm:text-xs"
+                  style={{ transform: 'rotate(-4deg)' }}
+                >
+                  Verified Doctors
+                </span>
+                <img
+                  src={`${import.meta.env.BASE_URL}consulting/hero-1.jpg`}
+                  alt=""
+                  width={400}
+                  height={320}
+                  decoding="async"
+                  fetchPriority="high"
+                  className="relative z-0 max-h-[min(52vw,280px)] w-auto object-contain object-bottom md:max-h-[300px]"
+                />
+              </div>
+              <div className="flex flex-col justify-center text-center md:text-left">
+                <h2
+                  id="booking-hero-headline"
+                  className="font-display text-[clamp(1.1rem,3.2vw,1.85rem)] font-bold uppercase leading-[1.2] tracking-[0.06em] text-white drop-shadow-sm sm:tracking-[0.1em]"
+                >
+                  {consultDoctorHeroCopy.headline}
+                </h2>
+                <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-white/95 md:mx-0 md:text-base">
+                  {consultDoctorHeroCopy.subheadline}
+                </p>
+                <div className="mt-6 flex justify-center md:justify-start">
+                  <button
+                    type="button"
+                    onClick={submitDoctorSearch}
+                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#1F1F1F] px-8 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-black [touch-action:manipulation] sm:min-h-14 sm:text-base"
+                  >
+                    Book Now
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+                      <path
+                        d="M5 12h14M13 6l6 6-6 6"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="relative aspect-[1440/538] w-full min-h-[200px]">
+              <img
+                src={heroBgSrc}
+                alt=""
+                width={1440}
+                height={538}
+                decoding="async"
+                fetchPriority="high"
+                className="pointer-events-none absolute inset-0 h-full w-full object-cover object-top"
+                aria-hidden
+              />
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-4 py-6 text-center sm:px-8 sm:py-10">
+                <p
+                  className={cn(
+                    'font-script text-[clamp(1.25rem,3.5vw,1.75rem)] leading-tight sm:text-[clamp(1.5rem,4vw,2rem)]',
+                    isNurse
+                      ? 'text-[#007d56]'
+                      : isLab
+                        ? 'text-[#A67C00]'
+                        : isAmbulance
+                          ? 'text-[#FC5000]'
+                          : isElder
+                            ? 'text-[#2E7D32]'
+                            : 'text-[#D53F8C]',
+                  )}
+                >
+                  {heroCopy.eyebrow}
+                </p>
+                <p
+                  className={cn(
+                    'mt-2 font-script text-[clamp(2rem,6.5vw,3.5rem)] leading-[1.05] drop-shadow-[0_1px_2px_rgba(255,255,255,0.6)] sm:mt-3',
+                    isNurse
+                      ? 'text-[#007d56]'
+                      : isLab
+                        ? 'text-[#A67C00]'
+                        : isAmbulance
+                          ? 'text-[#FC5000]'
+                          : isElder
+                            ? 'text-[#2E7D32]'
+                            : 'text-[#D53F8C]',
+                  )}
+                >
+                  {heroCopy.scriptLine}
+                </p>
+                <h2
+                  id="booking-hero-headline"
+                  className="mx-auto mt-2 max-w-[46rem] font-display text-[clamp(0.72rem,1.85vw,1rem)] font-bold uppercase leading-snug tracking-[0.12em] text-[#1a1a1a] drop-shadow-[0_1px_2px_rgba(255,255,255,0.75)] sm:mt-3 sm:max-w-[52rem] sm:tracking-[0.16em] md:text-[clamp(0.85rem,1.6vw,1.15rem)]"
+                >
+                  {heroCopy.headline}
+                </h2>
+              </div>
+            </div>
+          )}
 
           <form
             className="bg-white"

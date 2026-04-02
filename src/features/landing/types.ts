@@ -3,10 +3,15 @@ export type NavItem = {
   href: string
 }
 
-export type Doctor = {
-  name: string
-  specialty: string
+/** Figma Consulting — “Doctor Specialties” product cards. */
+export type ConsultingSpecialtyCard = {
+  categoryLabel: string
+  specialtyLabel: string
+  specialtyValue: string
   image: string
+  borderClass: string
+  bgClass: string
+  textClass: string
 }
 
 export type Testimonial = {

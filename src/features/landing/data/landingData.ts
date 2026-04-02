@@ -5,7 +5,7 @@ import type {
   BookLabPackage,
   BookingServiceTab,
   ConsultationMode,
-  Doctor,
+  ConsultingSpecialtyCard,
   FaqItem,
   FooterColumn,
   LandingQuickService,
@@ -70,12 +70,19 @@ export const happieTagline = {
   subtitle: 'Because care should feel good.',
 }
 
-/** Doctor Theme hero — text overlays `public/Doctor Theme.svg` (Figma Frame 1597884550). */
+/** Doctor Theme hero — text overlays `public/Doctor Theme.svg` (legacy; non–Book Doctor tabs). */
 export const doctorThemeHero = {
   eyebrow: 'Happie Happie Oye!',
   scriptLine: '300+ ZappieCare Heroes',
   headline: 'BOOK VERIFIED DOCTORS IN YOUR CITY',
 }
+
+/** Figma Consulting — Book Doctor gradient banner (tabs + hero + form). */
+export const consultDoctorHeroCopy = {
+  headline: 'CONSULT TRUSTED DOCTORS ANYTIME, ANYWHERE',
+  subheadline:
+    'Search And Book Appointments With Experienced Doctors Near You Or Consult Online.',
+} as const
 
 /** Homecare / Book Nurse hero — text overlays `public/Homecare Theme.svg` (Figma Book Nurse). */
 export const homecareThemeHero = {
@@ -188,33 +195,6 @@ export const services: ServiceItem[] = [
   {
     title: 'Emergency support',
     text: 'Reach urgent assistance quickly with guided triage and saved care preferences.',
-  },
-]
-
-export const doctors: Doctor[] = [
-  {
-    name: 'Dr Johnathon Roman',
-    specialty: 'Heart of cardiologist department',
-    image:
-      'https://api.builder.io/api/v1/image/assets/TEMP/f55a2470fd187fa68cecb0d831c28ff062d2b5b6?width=556',
-  },
-  {
-    name: 'Dr Emily Claire',
-    specialty: 'Dermatology and acne care',
-    image:
-      'https://api.builder.io/api/v1/image/assets/TEMP/f5004a8666bb7fddef03b3f2672578a588eb4166?width=556',
-  },
-  {
-    name: 'Dr Arthur Miles',
-    specialty: 'Family medicine specialist',
-    image:
-      'https://api.builder.io/api/v1/image/assets/TEMP/f5004a8666bb7fddef03b3f2672578a588eb4166?width=556',
-  },
-  {
-    name: 'Dr Lisa Morgan',
-    specialty: 'Wellness and preventive care',
-    image:
-      'https://api.builder.io/api/v1/image/assets/TEMP/f5004a8666bb7fddef03b3f2672578a588eb4166?width=556',
   },
 ]
 
@@ -687,6 +667,46 @@ export const bookDoctorSpecialtyPills = [
   { label: 'Gynecology', value: 'Gynecology' },
   { label: 'Orthopedics', value: 'Orthopedics' },
 ] as const
+
+/** Consulting — Doctor Specialties row (Figma product cards). */
+export const consultingSpecialtyCards: ConsultingSpecialtyCard[] = [
+  {
+    categoryLabel: 'General Health',
+    specialtyLabel: 'General Physician',
+    specialtyValue: 'General',
+    image: '/consulting/specialty-general.jpg',
+    borderClass: 'border-[#9D497E]',
+    bgClass: 'bg-[#FFEDF9]',
+    textClass: 'text-[#9D497E]',
+  },
+  {
+    categoryLabel: 'Heart & Blood Circulation',
+    specialtyLabel: 'Cardiology',
+    specialtyValue: 'Cardiology',
+    image: '/consulting/specialty-cardiology.jpg',
+    borderClass: 'border-[#FF9555]',
+    bgClass: 'bg-[#FFE9C9]',
+    textClass: 'text-[#E48F18]',
+  },
+  {
+    categoryLabel: 'Digestive Health',
+    specialtyLabel: 'Gastroenterology',
+    specialtyValue: 'Gastroenterology',
+    image: '/consulting/specialty-gastro.jpg',
+    borderClass: 'border-[#9D1522]',
+    bgClass: 'bg-[#FFC4C7]',
+    textClass: 'text-[#E63E41]',
+  },
+  {
+    categoryLabel: 'Brain & Nervous System',
+    specialtyLabel: 'Neurology',
+    specialtyValue: 'Neurology',
+    image: '/consulting/specialty-neuro.jpg',
+    borderClass: 'border-[#0E398C]',
+    bgClass: 'bg-[#DDEDF9]',
+    textClass: 'text-[#042D7D]',
+  },
+]
 
 export const bookDoctorSortOptions = ['Top Reviewed', 'Price: Low to High', 'Experience'] as const
 

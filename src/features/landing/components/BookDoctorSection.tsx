@@ -42,6 +42,7 @@ import {
   nurseFeeRangeDefaults,
   nurseNurseTypes,
 } from '@/features/landing/data/landingData'
+import { DOCTOR_SPECIALTY_KEY } from '@/features/landing/utils/landingBookingIntent'
 import type {
   BookAmbulanceProfile,
   BookDoctorProfile,
@@ -578,6 +579,21 @@ export function BookDoctorSection({ bookingSearchKind, heroSearchSnapshot }: Boo
       }
     }
   }, [heroSearchSnapshot])
+
+  useEffect(() => {
+    if (bookingSearchKind !== 'doctor' && bookingSearchKind !== null) {
+      sessionStorage.removeItem(DOCTOR_SPECIALTY_KEY)
+      return
+    }
+    const raw = sessionStorage.getItem(DOCTOR_SPECIALTY_KEY)
+    if (!raw) return
+    if (!consultationSpecialties.includes(raw)) {
+      sessionStorage.removeItem(DOCTOR_SPECIALTY_KEY)
+      return
+    }
+    setSelectedSpecialty(raw)
+    sessionStorage.removeItem(DOCTOR_SPECIALTY_KEY)
+  }, [bookingSearchKind])
 
   const filterBadgeCount = useMemo(() => {
     let n = 0

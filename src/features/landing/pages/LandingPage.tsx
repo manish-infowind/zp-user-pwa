@@ -76,13 +76,13 @@ export function LandingPage() {
         <LandingBookingStrip onBookingSearch={handleHomeBookingSearch} />
       </div>
       <main className="w-full min-w-0 md:pb-0">
-        <BookDoctorSection bookingSearchKind={bookingSearchKind} heroSearchSnapshot={heroSearchSnapshot} />
+        <DoctorsSection />
         <MobileHomeDashboard />
         <QuickServicesSection />
         <TrustZappieSection />
         <HeroSection />
         <ServicesSection />
-        <DoctorsSection />
+        <BookDoctorSection bookingSearchKind={bookingSearchKind} heroSearchSnapshot={heroSearchSnapshot} />
         <div className="flex flex-col-reverse md:contents">
           <TestimonialBanner />
           <TestimonialsSection />
