@@ -16,28 +16,17 @@ import {
   bookLabPackages,
   bookNurseProfiles,
   bookDoctorSortOptions,
-  bookingServiceTabs,
   landingStripDoctorTypes,
-  ambulanceBenefits,
-  ambulanceResponseTime,
-  ambulanceSupport,
-  ambulanceVerification,
-  consultationModes,
   consultationSpecialties,
-  elderAvailability,
-  elderBenefits,
   elderCareCategories,
-  elderCareDuration,
   elderCategoryFilterOptions,
   elderCaregiverFilterOptions,
   elderCaregiverTypes,
-  elderVerification,
   labSampleStripOptions,
   labTestCategories,
   labTestPackageStripOptions,
   nurseCareCategories,
   nurseCareModes,
-  nurseCareStripModes,
   nurseCareTypeStripOptions,
   nurseFeeRangeDefaults,
   nurseNurseTypes,
@@ -69,9 +58,6 @@ function FilterIcon() {
   )
 }
 
-const filterShell =
-  'relative flex min-h-[56px] w-full items-center rounded-xl bg-[#f4f5f5] px-3 py-2.5 text-left sm:min-h-[64px] sm:px-4 sm:py-3'
-
 const filterLabel = 'mb-0.5 text-[10px] font-medium uppercase tracking-[0.16em] text-[#9d9d9d] sm:text-[11px] sm:tracking-[0.18em]'
 
 function formatFee(value: number) {
@@ -80,39 +66,6 @@ function formatFee(value: number) {
 
 function matchesMode(profile: BookDoctorProfile, mode: ConsultationMode) {
   return profile.consultationModes.includes(mode)
-}
-
-function ChevronDown({ open }: { open: boolean }) {
-  return (
-    <svg
-      className={cn('size-5 shrink-0 text-[#5e616e] transition-transform', open && 'rotate-180')}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-      aria-hidden
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-    </svg>
-  )
-}
-
-function RadioDot({ active }: { active: boolean }) {
-  return (
-    <span
-      className={cn(
-        'grid size-5 shrink-0 place-items-center rounded-full border-2 transition-colors',
-        active ? 'border-[#007954] bg-[#007954]' : 'border-[#e2e8f0] bg-white',
-      )}
-      aria-hidden
-    >
-      {active ? (
-        <svg className="size-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-        </svg>
-      ) : null}
-    </span>
-  )
 }
 
 function DoctorPrice({ fee, originalFee }: { fee: number; originalFee: number }) {
@@ -519,65 +472,68 @@ export function BookDoctorSection({ bookingSearchKind, heroSearchSnapshot }: Boo
 
   useEffect(() => {
     if (!heroSearchSnapshot) return
-    if (heroSearchSnapshot.kind === 'doctor') {
-      if (consultationSpecialties.includes(heroSearchSnapshot.specialty)) {
-        setSelectedSpecialty(heroSearchSnapshot.specialty)
+    const frame = requestAnimationFrame(() => {
+      if (heroSearchSnapshot.kind === 'doctor') {
+        if (consultationSpecialties.includes(heroSearchSnapshot.specialty)) {
+          setSelectedSpecialty(heroSearchSnapshot.specialty)
+        }
+        setSelectedMode(heroSearchSnapshot.consultationMode)
+        return
       }
-      setSelectedMode(heroSearchSnapshot.consultationMode)
-      return
-    }
-    if (heroSearchSnapshot.kind === 'nurse') {
-      const cat = heroSearchSnapshot.nurseCareCategory
-      if ((nurseCareCategories as readonly string[]).includes(cat)) {
-        setNurseCareCategory(cat as NurseCareCategory)
+      if (heroSearchSnapshot.kind === 'nurse') {
+        const cat = heroSearchSnapshot.nurseCareCategory
+        if ((nurseCareCategories as readonly string[]).includes(cat)) {
+          setNurseCareCategory(cat as NurseCareCategory)
+        }
+        const mode = heroSearchSnapshot.nurseCareMode
+        if ((nurseCareModes as readonly string[]).includes(mode)) {
+          setNurseCareMode(mode as NurseCareMode)
+        }
+        return
       }
-      const mode = heroSearchSnapshot.nurseCareMode
-      if ((nurseCareModes as readonly string[]).includes(mode)) {
-        setNurseCareMode(mode as NurseCareMode)
+      if (heroSearchSnapshot.kind === 'lab') {
+        const { testPackageType, sampleCollection } = heroSearchSnapshot
+        if ((labTestPackageStripOptions as readonly string[]).includes(testPackageType)) {
+          setLabStripPackageFilter(testPackageType)
+        } else {
+          setLabStripPackageFilter('All Tests')
+        }
+        if ((labSampleStripOptions as readonly string[]).includes(sampleCollection)) {
+          setLabSampleFilter(sampleCollection)
+        } else {
+          setLabSampleFilter('Any')
+        }
+        return
       }
-      return
-    }
-    if (heroSearchSnapshot.kind === 'lab') {
-      const { testPackageType, sampleCollection } = heroSearchSnapshot
-      if ((labTestPackageStripOptions as readonly string[]).includes(testPackageType)) {
-        setLabStripPackageFilter(testPackageType)
-      } else {
-        setLabStripPackageFilter('All Tests')
+      if (heroSearchSnapshot.kind === 'ambulance') {
+        const { ambulanceType, destination } = heroSearchSnapshot
+        if ((ambulanceTypeStripOptions as readonly string[]).includes(ambulanceType)) {
+          setAmbulanceTypeFilter(ambulanceType)
+        } else {
+          setAmbulanceTypeFilter('All')
+        }
+        if ((ambulanceDestinationOptions as readonly string[]).includes(destination)) {
+          setAmbulanceDestinationFilter(destination)
+        } else {
+          setAmbulanceDestinationFilter('Any')
+        }
+        return
       }
-      if ((labSampleStripOptions as readonly string[]).includes(sampleCollection)) {
-        setLabSampleFilter(sampleCollection)
-      } else {
-        setLabSampleFilter('Any')
+      if (heroSearchSnapshot.kind === 'elder') {
+        const { elderCareCategory, caregiverType } = heroSearchSnapshot
+        if ((elderCareCategories as readonly string[]).includes(elderCareCategory)) {
+          setElderCategoryFilter(elderCareCategory)
+        } else {
+          setElderCategoryFilter('All')
+        }
+        if ((elderCaregiverTypes as readonly string[]).includes(caregiverType)) {
+          setElderCaregiverFilter(caregiverType)
+        } else {
+          setElderCaregiverFilter('Any')
+        }
       }
-      return
-    }
-    if (heroSearchSnapshot.kind === 'ambulance') {
-      const { ambulanceType, destination } = heroSearchSnapshot
-      if ((ambulanceTypeStripOptions as readonly string[]).includes(ambulanceType)) {
-        setAmbulanceTypeFilter(ambulanceType)
-      } else {
-        setAmbulanceTypeFilter('All')
-      }
-      if ((ambulanceDestinationOptions as readonly string[]).includes(destination)) {
-        setAmbulanceDestinationFilter(destination)
-      } else {
-        setAmbulanceDestinationFilter('Any')
-      }
-      return
-    }
-    if (heroSearchSnapshot.kind === 'elder') {
-      const { elderCareCategory, caregiverType } = heroSearchSnapshot
-      if ((elderCareCategories as readonly string[]).includes(elderCareCategory)) {
-        setElderCategoryFilter(elderCareCategory)
-      } else {
-        setElderCategoryFilter('All')
-      }
-      if ((elderCaregiverTypes as readonly string[]).includes(caregiverType)) {
-        setElderCaregiverFilter(caregiverType)
-      } else {
-        setElderCaregiverFilter('Any')
-      }
-    }
+    })
+    return () => cancelAnimationFrame(frame)
   }, [heroSearchSnapshot])
 
   useEffect(() => {
@@ -591,8 +547,11 @@ export function BookDoctorSection({ bookingSearchKind, heroSearchSnapshot }: Boo
       sessionStorage.removeItem(DOCTOR_SPECIALTY_KEY)
       return
     }
-    setSelectedSpecialty(raw)
-    sessionStorage.removeItem(DOCTOR_SPECIALTY_KEY)
+    const frame = requestAnimationFrame(() => {
+      setSelectedSpecialty(raw)
+      sessionStorage.removeItem(DOCTOR_SPECIALTY_KEY)
+    })
+    return () => cancelAnimationFrame(frame)
   }, [bookingSearchKind])
 
   const filterBadgeCount = useMemo(() => {
@@ -769,7 +728,6 @@ export function BookDoctorSection({ bookingSearchKind, heroSearchSnapshot }: Boo
     resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  const isNurseResults = bookingSearchKind === 'nurse'
   const isLabResults = bookingSearchKind === 'lab'
   const isAmbulanceResults = bookingSearchKind === 'ambulance'
   const isElderResults = bookingSearchKind === 'elder'
