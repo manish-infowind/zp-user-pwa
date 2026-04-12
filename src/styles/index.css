@@ -7,7 +7,7 @@
     line-height: 1.5;
     font-weight: 400;
     color: var(--color-ink);
-    background: linear-gradient(180deg, #fff7ea 0%, #fffdf8 18%, #ffffff 100%);
+    background: #ffffff;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -29,9 +29,7 @@
     margin: 0;
     min-width: 320px;
     overflow-x: hidden;
-    background:
-      radial-gradient(circle at top left, rgba(240, 218, 105, 0.16), transparent 28%),
-      var(--color-bg);
+    background: #ffffff;
   }
 
   body,

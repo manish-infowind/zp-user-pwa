@@ -1,30 +1,24 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import homeCareQuickServiceImage from '@/assets/Group 1171276139.png'
 import { BookDoctorSection } from '@/features/landing/components/BookDoctorSection'
+import { ConsultDoctorHero } from '@/features/landing/components/heroes/ConsultDoctorHero'
+import { ConsultLabHero } from '@/features/landing/components/heroes/ConsultLabHero'
+import { ConsultNurseHero } from '@/features/landing/components/heroes/ConsultNurseHero'
+import {
+  bookingHashMap,
+  createSearchPayload,
+  initialSearchForms,
+  readInitialBookingState,
+  searchTabs,
+  type LandingBookingKind,
+  type LandingSearchForm,
+} from '@/features/landing/config/landingSearchConfig'
 import type { HeroBookingSearchPayload } from '@/features/landing/types'
 import { BOOKING_INTENT_KEY, setBookingIntent } from '@/features/landing/utils/landingBookingIntent'
 import { cn } from '@/utils/cn'
 
-type BookingKind = 'doctor' | 'nurse' | 'lab' | 'ambulance' | 'elder'
-
-type SearchForm = {
-  location: string
-  primary: string
-  secondary: string
-  date: string
-  slot: string
-}
-
-type SearchTabConfig = {
-  kind: BookingKind
-  label: string
-  searchLabel: string
-  primaryLabel: string
-  primaryOptions: string[]
-  secondaryLabel: string
-  secondaryOptions: string[]
-}
+type BookingKind = LandingBookingKind
+type SearchForm = LandingSearchForm
 
 type QuickServiceCard = {
   title: string
@@ -32,8 +26,11 @@ type QuickServiceCard = {
   image: string
   imageAlt?: string
   accent: string
-  imageClassName?: string
-  assetType?: 'image' | 'home-care-art'
+  /** Absolute wrapper for bottom artwork (Figma Frame 2087324546). */
+  artSlotClassName: string
+  imageClassName: string
+  /** Consult card: extra corner mark from Figma. */
+  consultCorner?: boolean
   kind: BookingKind
 }
 
@@ -49,130 +46,48 @@ type HeroDoctorCard = {
   featured?: boolean
 }
 
-const searchTabs: SearchTabConfig[] = [
-  {
-    kind: 'doctor',
-    label: 'Book Doctor',
-    searchLabel: 'Choose Doctor Type',
-    primaryLabel: 'Speciality',
-    primaryOptions: ['Orthopedics', 'General Physician', 'Dermatology', 'Cardiology'],
-    secondaryLabel: 'Visit Type',
-    secondaryOptions: ['Clinic Visit', 'Home Visit'],
-  },
-  {
-    kind: 'nurse',
-    label: 'Book Nurse',
-    searchLabel: 'Choose Care Type',
-    primaryLabel: 'Care Category',
-    primaryOptions: ['General Care', 'Elder Care', 'Post-Surgery Care', 'Mother & Newborn Care'],
-    secondaryLabel: 'Care Mode',
-    secondaryOptions: ['Home Visit', 'Hospital Duty'],
-  },
-  {
-    kind: 'lab',
-    label: 'Lab Test',
-    searchLabel: 'Choose Test Type',
-    primaryLabel: 'Package Type',
-    primaryOptions: ['All Tests', 'Blood Test', 'Thyroid', 'Wellness'],
-    secondaryLabel: 'Sample Collection',
-    secondaryOptions: ['Lab Visit', 'Home Sample Collection'],
-  },
-  {
-    kind: 'ambulance',
-    label: 'Ambulance',
-    searchLabel: 'Choose Ambulance Type',
-    primaryLabel: 'Vehicle Type',
-    primaryOptions: ['Basic', 'ALS', 'ICU', 'Neonatal'],
-    secondaryLabel: 'Destination',
-    secondaryOptions: ['Apollo Hospital', 'Sterling Hospital', 'Civil Hospital', 'Any Nearby Hospital'],
-  },
-  {
-    kind: 'elder',
-    label: 'Elder Care',
-    searchLabel: 'Choose Service Type',
-    primaryLabel: 'Service Category',
-    primaryOptions: ['Daily Support', '24-Hour Care', 'Mobility Support', 'Companion Care'],
-    secondaryLabel: 'Caregiver Type',
-    secondaryOptions: ['Attendant', 'Nurse', 'Physiotherapy Support', 'Companion'],
-  },
-]
-
-const initialSearchForms: Record<BookingKind, SearchForm> = {
-  doctor: {
-    location: 'Ahmedabad',
-    primary: 'Orthopedics',
-    secondary: 'Clinic Visit',
-    date: 'Today',
-    slot: '9:30 AM',
-  },
-  nurse: {
-    location: 'Ahmedabad',
-    primary: 'General Care',
-    secondary: 'Home Visit',
-    date: 'Today',
-    slot: '10:00 AM',
-  },
-  lab: {
-    location: 'Ahmedabad',
-    primary: 'All Tests',
-    secondary: 'Home Sample Collection',
-    date: 'Tomorrow',
-    slot: '8:00 AM',
-  },
-  ambulance: {
-    location: 'Ahmedabad',
-    primary: 'Basic',
-    secondary: 'Any Nearby Hospital',
-    date: 'Now',
-    slot: 'Within 15 mins',
-  },
-  elder: {
-    location: 'Ahmedabad',
-    primary: 'Daily Support',
-    secondary: 'Attendant',
-    date: 'This Week',
-    slot: 'Flexible',
-  },
-}
+const quickServiceImg = (file: string) => `${import.meta.env.BASE_URL}${file}`
 
 const quickServices: QuickServiceCard[] = [
   {
     title: 'Home Care',
     description: 'Nurses, beds, and medical support delivered to your doorstep.',
-    image: homeCareQuickServiceImage,
+    image: quickServiceImg('quick-service-home.png'),
     imageAlt: 'Home care service illustration',
     accent: '#12CE94',
-    imageClassName: 'h-[194px] w-auto object-contain object-bottom',
-    assetType: 'image',
+    artSlotClassName: 'pointer-events-none absolute left-[113px] top-[166px] h-[212px] w-[175px]',
+    imageClassName: 'h-full w-full object-contain object-bottom',
     kind: 'nurse',
   },
   {
     title: 'Consult Now',
     description: 'Nurses, beds, and medical support delivered to your doorstep.',
-    image: 'https://api.builder.io/api/v1/image/assets/TEMP/7dfe52ae2e9c570616bcc5cbe4e9d6bf86c8d219?width=536',
+    image: quickServiceImg('quick-service-consult.png'),
+    imageAlt: '',
     accent: '#DA9EDE',
-    imageClassName: 'h-[220px] w-auto object-contain object-bottom',
-    assetType: 'image',
+    artSlotClassName: 'pointer-events-none absolute left-[49px] top-[146px] h-[268px] w-[277px]',
+    imageClassName: 'absolute left-[9px] top-0 h-[268px] w-[268px] max-w-none object-contain',
+    consultCorner: true,
     kind: 'doctor',
   },
   {
-    title: 'Lab testS',
+    title: 'Lab tests',
     description: 'Nurses, beds, and medical support delivered to your doorstep.',
-    image: 'https://api.builder.io/api/v1/image/assets/TEMP/4718299521295e1779ecb029c39102c3fbc13d16?width=564',
-    imageAlt: 'Group 1597884231',
+    image: quickServiceImg('quick-service-lab.png'),
+    imageAlt: 'Lab tests illustration',
     accent: '#FACD00',
-    imageClassName: 'h-[184px] w-auto max-w-none object-contain object-bottom',
-    assetType: 'image',
+    artSlotClassName: 'pointer-events-none absolute left-[25px] top-[210px] h-[184px] w-[282px]',
+    imageClassName: 'h-full w-full object-contain object-bottom',
     kind: 'lab',
   },
   {
     title: '24x7 Emergency',
     description: 'Nurses, beds, and medical support delivered to your doorstep.',
-    image: 'https://api.builder.io/api/v1/image/assets/TEMP/00b9f31dcc9f453ff171f1b2f5de341b7cdff8e5?width=400',
-    imageAlt: 'OBJECTS',
+    image: quickServiceImg('quick-service-emergency.png'),
+    imageAlt: 'Emergency ambulance',
     accent: '#FC5000',
-    imageClassName: 'h-[183px] w-auto object-contain object-bottom',
-    assetType: 'image',
+    artSlotClassName: 'pointer-events-none absolute left-[86px] top-[190px] h-[183px] w-[200px]',
+    imageClassName: 'h-full w-full object-contain object-bottom',
     kind: 'ambulance',
   },
 ]
@@ -370,85 +285,6 @@ const faqGroups = {
 
 type FaqCategory = keyof typeof faqGroups
 
-function createSearchPayload(kind: BookingKind, form: SearchForm): HeroBookingSearchPayload {
-  switch (kind) {
-    case 'doctor':
-      return {
-        kind: 'doctor',
-        specialty: form.primary,
-        consultationMode: form.secondary === 'Home Visit' ? 'Home Visit' : 'Clinic Visit',
-      }
-    case 'nurse':
-      return {
-        kind: 'nurse',
-        nurseCareCategory: form.primary,
-        nurseCareMode: form.secondary,
-      }
-    case 'lab':
-      return {
-        kind: 'lab',
-        testPackageType: form.primary,
-        sampleCollection: form.secondary,
-      }
-    case 'ambulance':
-      return {
-        kind: 'ambulance',
-        ambulanceType: form.primary,
-        destination: form.secondary,
-      }
-    case 'elder':
-      return {
-        kind: 'elder',
-        elderCareCategory: form.primary,
-        caregiverType: form.secondary,
-      }
-  }
-}
-
-function readInitialBookingState() {
-  if (typeof window === 'undefined' || typeof sessionStorage === 'undefined') {
-    return {
-      activeTab: 'doctor' as BookingKind,
-      bookingSearchKind: null as BookingKind | null,
-      heroSearchSnapshot: null as HeroBookingSearchPayload | null,
-    }
-  }
-
-  const fromSession = sessionStorage.getItem(BOOKING_INTENT_KEY) as BookingKind | null
-  if (fromSession) {
-    sessionStorage.removeItem(BOOKING_INTENT_KEY)
-    return {
-      activeTab: fromSession,
-      bookingSearchKind: fromSession,
-      heroSearchSnapshot: createSearchPayload(fromSession, initialSearchForms[fromSession]),
-    }
-  }
-
-  const raw = window.location.hash.slice(1)
-  const hashMap: Record<string, BookingKind> = {
-    'book-doctor': 'doctor',
-    'book-nurse': 'nurse',
-    'book-lab': 'lab',
-    'book-ambulance': 'ambulance',
-    'book-elder': 'elder',
-  }
-  const kind = hashMap[raw]
-
-  if (!kind) {
-    return {
-      activeTab: 'doctor' as BookingKind,
-      bookingSearchKind: null as BookingKind | null,
-      heroSearchSnapshot: null as HeroBookingSearchPayload | null,
-    }
-  }
-
-  return {
-    activeTab: kind,
-    bookingSearchKind: kind,
-    heroSearchSnapshot: createSearchPayload(kind, initialSearchForms[kind]),
-  }
-}
-
 function LogoMark({ compact = false }: { compact?: boolean }) {
   return (
     <span className={cn('inline-flex items-center gap-2', compact ? 'gap-1.5' : 'gap-2.5')}>
@@ -585,6 +421,9 @@ export function LandingPage() {
   const heroesCarouselRef = useRef<HTMLDivElement>(null)
   const [initialBookingState] = useState(readInitialBookingState)
   const [activeTab, setActiveTab] = useState<BookingKind>(initialBookingState.activeTab)
+  const [selectedServiceKind, setSelectedServiceKind] = useState<BookingKind | null>(
+    initialBookingState.selectedServiceKind,
+  )
   const [searchForms, setSearchForms] = useState<Record<BookingKind, SearchForm>>(initialSearchForms)
   const [bookingSearchKind, setBookingSearchKind] = useState<BookingKind | null>(initialBookingState.bookingSearchKind)
   const [heroSearchSnapshot, setHeroSearchSnapshot] = useState<HeroBookingSearchPayload | null>(
@@ -601,6 +440,23 @@ export function LandingPage() {
 
   const activeForm = searchForms[activeTab]
   const activeFaqs = faqGroups[faqTab]
+
+  const selectBookingTab = useCallback((kind: BookingKind) => {
+    setActiveTab(kind)
+    setSelectedServiceKind(kind)
+  }, [])
+
+  const isDoctorHeader = selectedServiceKind === 'doctor'
+  const isNurseHeader = selectedServiceKind === 'nurse'
+  const isLabHeader = selectedServiceKind === 'lab'
+  const useConsultDesktopHeader = isDoctorHeader || isNurseHeader || isLabHeader
+  const consultTabTheme: 'doctor' | 'nurse' | 'lab' | null = isDoctorHeader
+    ? 'doctor'
+    : isNurseHeader
+      ? 'nurse'
+      : isLabHeader
+        ? 'lab'
+        : null
   const heroesIndicatorWidth = 50.166
   const heroesIndicatorOffset = 1.25
   const heroesIndicatorTravel = 100 - heroesIndicatorWidth - heroesIndicatorOffset
@@ -628,6 +484,7 @@ export function LandingPage() {
     (kind: BookingKind, payload?: HeroBookingSearchPayload) => {
       const nextPayload = payload ?? buildPayload(kind)
       setActiveTab(kind)
+      setSelectedServiceKind(kind)
       setBookingSearchKind(kind)
       setHeroSearchSnapshot(nextPayload)
       setBookingIntent(kind)
@@ -644,33 +501,28 @@ export function LandingPage() {
     if (fromSession) {
       sessionStorage.removeItem(BOOKING_INTENT_KEY)
       setActiveTab(fromSession)
+      setSelectedServiceKind(fromSession)
       setBookingSearchKind(fromSession)
       setHeroSearchSnapshot(buildPayload(fromSession))
       return
     }
 
     const raw = window.location.hash.slice(1)
-    if (raw === 'book-doctor') {
-      setActiveTab('doctor')
-      setBookingSearchKind('doctor')
-      setHeroSearchSnapshot(buildPayload('doctor'))
-    } else if (raw === 'book-nurse') {
-      setActiveTab('nurse')
-      setBookingSearchKind('nurse')
-      setHeroSearchSnapshot(buildPayload('nurse'))
-    } else if (raw === 'book-lab') {
-      setActiveTab('lab')
-      setBookingSearchKind('lab')
-      setHeroSearchSnapshot(buildPayload('lab'))
-    } else if (raw === 'book-ambulance') {
-      setActiveTab('ambulance')
-      setBookingSearchKind('ambulance')
-      setHeroSearchSnapshot(buildPayload('ambulance'))
-    } else if (raw === 'book-elder') {
-      setActiveTab('elder')
-      setBookingSearchKind('elder')
-      setHeroSearchSnapshot(buildPayload('elder'))
+    const kind = bookingHashMap[raw]
+
+    if (kind) {
+      setActiveTab(kind)
+      setSelectedServiceKind(kind)
+      setBookingSearchKind(kind)
+      setHeroSearchSnapshot(buildPayload(kind))
+      return
     }
+
+    if (raw === 'booking-results') return
+
+    setBookingSearchKind(null)
+    setSelectedServiceKind(null)
+    setActiveTab('doctor')
   }, [buildPayload])
 
   useEffect(() => {
@@ -701,17 +553,56 @@ export function LandingPage() {
     }
   }, [])
 
-  return (
-    <div className="relative mx-auto min-h-screen w-full max-w-[1440px] overflow-x-clip bg-[#fffdf7] text-[#2f2c28]">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_top_left,rgba(255,197,121,0.3),transparent_28%),radial-gradient(circle_at_top_right,rgba(255,233,208,0.85),transparent_34%),linear-gradient(180deg,#fbf2d9_0%,#fff8e7_48%,#fffdf7_100%)]" />
-      <div className="pointer-events-none absolute right-[-8rem] top-20 hidden h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(255,198,123,0.45),rgba(255,198,123,0))] blur-2xl lg:block" />
-      <div className="pointer-events-none absolute left-[-6rem] top-40 hidden h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(252,151,94,0.22),rgba(252,151,94,0))] blur-2xl lg:block" />
+  const landingHeroBlobSrc = `${import.meta.env.BASE_URL}landing-hero-blob.svg`
+  const landingHeroBottomWaveSrc = `${import.meta.env.BASE_URL}landing-hero-bottom-wave.png`
+  const doctorHeroBlobSrc = `${import.meta.env.BASE_URL}hero-doctor-blob.svg`
+  /** Full-bleed page background behind header (not the inner hero card frames). */
+  const nurseHeroPageBackgroundSrc = `${import.meta.env.BASE_URL}nurse-hero-page-background.svg`
+  const labHeroPageBackgroundSrc = `${import.meta.env.BASE_URL}lab-hero-page-background.svg`
+  const doctorHeroWaveSrc = `${import.meta.env.BASE_URL}hero-doctor-wave.png`
+  const doctorBgFrameSrc = `${import.meta.env.BASE_URL}doctor-bg-frame.svg`
+  const doctorCharacterSrc = `${import.meta.env.BASE_URL}hero-doctor-character.png`
+  const doctorHeaderLogoSrc = `${import.meta.env.BASE_URL}hero-doctor-logo.png`
+  const nurseBgFrameSrc = `${import.meta.env.BASE_URL}nurse-bg-frame.svg`
+  const nurseCharacterSrc = `${import.meta.env.BASE_URL}nurse.svg`
+  const labBgFrameSrc = `${import.meta.env.BASE_URL}lab-bg-frame.svg`
+  const labCharacterSrc = `${import.meta.env.BASE_URL}lab-nurse.svg`
+  const heroPageBlobSrc = isDoctorHeader
+    ? doctorHeroBlobSrc
+    : isNurseHeader
+      ? nurseHeroPageBackgroundSrc
+      : isLabHeader
+        ? labHeroPageBackgroundSrc
+        : landingHeroBlobSrc
+  const heroBottomWaveSrc = isDoctorHeader ? doctorHeroWaveSrc : landingHeroBottomWaveSrc
 
+  return (
+    <div className="relative mx-auto min-h-screen w-full max-w-[1440px] overflow-x-clip bg-white text-[#2f2c28]">
       <span id="profile" className="sr-only">
         Profile
       </span>
 
-      <header id="home" className="relative z-10 px-4 pb-4 pt-5 sm:px-6 lg:px-8">
+      {/* Top hero: cream default; Book Doctor / Nurse / Lab use themed strip + blob (Figma consulting frames). */}
+      <div
+        className={cn(
+          'relative overflow-x-clip',
+          isDoctorHeader && 'bg-[#FFECF8]',
+          isNurseHeader && 'bg-[#E8FAF4]',
+          isLabHeader && 'bg-[#FFF8EB]',
+          !isDoctorHeader && !isNurseHeader && !isLabHeader && 'bg-[#FEFAE7]',
+        )}
+      >
+        <img
+          src={heroPageBlobSrc}
+          alt=""
+          width={1874}
+          height={1418}
+          decoding="async"
+          className="pointer-events-none absolute -left-[clamp(5rem,18vw,219px)] -top-[clamp(2rem,8vw,63px)] z-0 aspect-[1874/1418] w-[min(1874px,220vw)] max-w-none md:-left-[219px] md:-top-[63px] md:w-[min(2180px,150vw)] md:max-w-none"
+          aria-hidden
+        />
+
+        <header id="home" className="relative z-10 px-4 pb-4 pt-5 sm:px-6 lg:px-8">
         <div className="md:hidden">
           <div className="flex items-center justify-between gap-3 rounded-[24px] bg-white/88 px-4 py-3 shadow-[0_18px_40px_rgba(57,46,25,0.08)] backdrop-blur">
             <a href="#home" className="text-inherit no-underline">
@@ -753,60 +644,179 @@ export function LandingPage() {
         </div>
 
         <div className="hidden md:block">
-          <div className="mx-auto rounded-full border border-white/80 bg-white/92 px-5 py-3 shadow-[0_20px_50px_rgba(57,46,25,0.08)] backdrop-blur lg:px-6">
-            <div className="flex items-center justify-between gap-6">
-              <a href="#home" className="text-inherit no-underline">
-                <LogoMark />
-              </a>
-              <nav className="flex items-center gap-6 text-sm font-semibold text-[#7f7363]" aria-label="Primary">
-                <a href="#services" className="no-underline transition hover:text-[#2f2c28]">
-                  Services
+          {useConsultDesktopHeader ? (
+            <div className="mx-auto max-w-[1200px] rounded-[12px] border border-black/[0.03] bg-white/[0.97] px-5 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.06)] backdrop-blur-[2.5px] lg:px-6">
+              <div className="flex items-center justify-between gap-4">
+                <a href="#home" className="shrink-0 text-inherit no-underline">
+                  <img
+                    src={doctorHeaderLogoSrc}
+                    alt="ZappieCare"
+                    width={209}
+                    height={43}
+                    decoding="async"
+                    fetchPriority="high"
+                    className="h-[43px] w-auto max-w-[209px] object-contain"
+                  />
                 </a>
-                <a href="#trust" className="no-underline transition hover:text-[#2f2c28]">
-                  Cities
-                </a>
-                <button
-                  type="button"
-                  onClick={() => openBookingResults('doctor')}
-                  className="border-0 bg-transparent p-0 text-sm font-semibold text-[#7f7363] transition hover:text-[#2f2c28]"
-                >
-                  My Booking
-                </button>
-                <a href="#faq" className="no-underline transition hover:text-[#2f2c28]">
-                  Need Help?
-                </a>
-                <a href="#profile" className="no-underline transition hover:text-[#2f2c28]">
-                  Login/SignUp
-                </a>
-              </nav>
+                <nav className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2 text-base font-normal text-[#1F1F1F]" aria-label="Primary">
+                  <a href="#services" className="inline-flex items-center gap-1.5 no-underline hover:opacity-80">
+                    <svg className="size-[18px] shrink-0" viewBox="0 0 18 18" fill="none" aria-hidden>
+                      <path
+                        d="M14.563 11.785C17.526 8.02785 16.7255 4.30131 14.597 2.99561C12.5857 1.76192 10.8303 2.25908 9.7758 3.05101L8.99985 3.63119M14.563 11.785C13.8517 12.6867 12.9238 13.5903 11.7454 14.4626C10.5857 15.3209 10.0059 15.75 9 15.75C7.9941 15.75 7.41429 15.3209 6.25465 14.4626C0.166289 9.95618 0.763552 4.6147 3.40308 2.99561C5.41432 1.76192 7.16971 2.25908 8.2242 3.05101L8.99985 3.63119M14.563 11.785L10.4191 7.08359C10.2494 6.89115 9.96547 6.84972 9.7479 6.98568L8.10832 8.01045C7.53135 8.37105 6.7825 8.2899 6.29617 7.81403C5.65378 7.18547 5.71859 6.13327 6.43327 5.5883L8.99985 3.63119"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    Services
+                    <svg className="size-2 shrink-0" viewBox="0 0 8 4" fill="none" aria-hidden>
+                      <path d="M0 0L4 4L8 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </a>
+                  <a href="#services" className="inline-flex items-center gap-1.5 no-underline hover:opacity-80">
+                    <svg className="size-[18px] shrink-0" viewBox="0 0 18 18" fill="none" aria-hidden>
+                      <path
+                        d="M5.76878 14.7121C6.21205 14.7121 6.43369 14.7121 6.6356 14.787C6.66364 14.7973 6.69129 14.8088 6.71848 14.8213C6.91423 14.9111 7.07095 15.0678 7.38439 15.3812C8.10585 16.1026 8.46652 16.4634 8.91037 16.4966C8.97 16.5011 9.03 16.5011 9.08962 16.4966C9.53347 16.4634 9.89422 16.1026 10.6156 15.3812C10.9291 15.0678 11.0857 14.9111 11.2815 14.8213C11.3087 14.8088 11.3363 14.7973 11.3644 14.787C11.5663 14.7121 11.788 14.7121 12.2312 14.7121H12.313C13.4439 14.7121 14.0094 14.7121 14.3607 14.3607C14.7121 14.0094 14.7121 13.4439 14.7121 12.313V12.2312C14.7121 11.788 14.7121 11.5663 14.787 11.3644C14.7973 11.3363 14.8088 11.3087 14.8213 11.2815C14.9111 11.0857 15.0678 10.9291 15.3812 10.6156C16.1026 9.89422 16.4634 9.53347 16.4966 9.08962C16.5011 9.03 16.5011 8.97 16.4966 8.91037C16.4634 8.46652 16.1026 8.10585 15.3812 7.38439C15.0678 7.07095 14.9111 6.91423 14.8213 6.71848C14.8088 6.69129 14.7973 6.66364 14.787 6.6356C14.7121 6.43369 14.7121 6.21205 14.7121 5.76878V5.68702C14.7121 4.55609 14.7121 3.99062 14.3607 3.63929C14.0094 3.28795 13.4439 3.28796 12.313 3.28796H12.2312C11.788 3.28796 11.5663 3.28795 11.3644 3.21304C11.3363 3.20263 11.3087 3.19118 11.2815 3.17871C11.0857 3.08891 10.9291 2.93219 10.6156 2.61875C9.89422 1.89733 9.53347 1.53661 9.08962 1.50335C9.03 1.49888 8.97 1.49888 8.91037 1.50335C8.46652 1.53661 8.10585 1.89733 7.38439 2.61875C7.07095 2.93219 6.91423 3.08891 6.71848 3.17871C6.69129 3.19118 6.66364 3.20263 6.6356 3.21304C6.43369 3.28795 6.21205 3.28796 5.76878 3.28796H5.68702C4.55609 3.28796 3.99062 3.28795 3.63929 3.63929C3.28795 3.99062 3.28796 4.55609 3.28796 5.68702V5.76878C3.28796 6.21205 3.28795 6.43369 3.21304 6.6356C3.20263 6.66364 3.19118 6.69129 3.17871 6.71848C3.08891 6.91423 2.93219 7.07095 2.61875 7.38439C1.89733 8.10585 1.53661 8.46652 1.50335 8.91037C1.49888 8.97 1.49888 9.03 1.50335 9.08962C1.53661 9.53347 1.89733 9.89422 2.61875 10.6156C2.93219 10.9291 3.08891 11.0857 3.17871 11.2815C3.19118 11.3087 3.20263 11.3363 3.21304 11.3644C3.28795 11.5663 3.28796 11.788 3.28796 12.2312V12.313C3.28796 13.4439 3.28795 14.0094 3.63929 14.3607C3.99062 14.7121 4.55609 14.7121 5.68702 14.7121H5.76878Z"
+                        stroke="currentColor"
+                      />
+                      <path d="M11.25 6.75L6.75 11.25" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+                      <path
+                        d="M11.25 11.25H11.2419M6.75807 6.75H6.75"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    Offers
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => openBookingResults(selectedServiceKind ?? activeTab)}
+                    className="inline-flex items-center gap-1 border-0 bg-transparent p-0 font-normal text-inherit hover:opacity-80"
+                  >
+                    <svg className="size-[18px] shrink-0" viewBox="0 0 18 18" fill="none" aria-hidden>
+                      <path
+                        d="M3.75 2.25h10.5a.75.75 0 0 1 .75.75v12a.75.75 0 0 1-.75.75H3.75A.75.75 0 0 1 3 15V3a.75.75 0 0 1 .75-.75Z"
+                        stroke="currentColor"
+                        strokeWidth="1.2"
+                        strokeLinejoin="round"
+                      />
+                      <path d="M6 1.5V3M12 1.5V3M3 5.25h12" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                    </svg>
+                    My Booking
+                  </button>
+                  <a href="#faq" className="no-underline hover:opacity-80">
+                    Need Help?
+                  </a>
+                  <a href="#profile" className="no-underline hover:opacity-80">
+                    Login/SignUp
+                  </a>
+                </nav>
+              </div>
             </div>
-          </div>
-
-          <div className="px-4 pb-6 pt-10 text-center lg:px-12">
-            <p className="mb-2 font-script text-[2.55rem] normal-case text-[#f84f01]">Happie Happie Oye!</p>
-            <h1 className="mx-auto max-w-4xl text-[clamp(2.6rem,4vw,4.6rem)] font-bold uppercase leading-[0.92] tracking-[-0.03em] text-[#27231f]">
-              Because care should feel good.
-            </h1>
-          </div>
-
-          <div id="booking" className="mx-auto max-w-[1180px] rounded-[34px] border border-white/80 bg-white/92 p-4 shadow-[0_30px_60px_rgba(57,46,25,0.08)] backdrop-blur lg:p-5">
-            <div className="flex flex-wrap gap-2">
-              {searchTabs.map((tab) => (
-                <button
-                  key={tab.kind}
-                  type="button"
-                  onClick={() => setActiveTab(tab.kind)}
-                  className={cn(
-                    'min-h-11 rounded-2xl px-4 text-sm font-bold transition',
-                    activeTab === tab.kind
-                      ? 'bg-[#f7a7cb] text-[#742b52] shadow-[0_10px_24px_rgba(247,167,203,0.35)]'
-                      : 'bg-[#f8f4ed] text-[#796b59] hover:bg-[#f0eadd]',
-                  )}
-                >
-                  {tab.label}
-                </button>
-              ))}
+          ) : (
+            <div className="mx-auto rounded-full border border-white/80 bg-white/92 px-5 py-3 shadow-[0_20px_50px_rgba(57,46,25,0.08)] backdrop-blur lg:px-6">
+              <div className="flex items-center justify-between gap-6">
+                <a href="#home" className="text-inherit no-underline">
+                  <LogoMark />
+                </a>
+                <nav className="flex items-center gap-6 text-sm font-semibold text-[#7f7363]" aria-label="Primary">
+                  <a href="#services" className="no-underline transition hover:text-[#2f2c28]">
+                    Services
+                  </a>
+                  <a href="#trust" className="no-underline transition hover:text-[#2f2c28]">
+                    Cities
+                  </a>
+                  <a href="#booking" className="no-underline transition hover:text-[#2f2c28]">
+                    My Booking
+                  </a>
+                  <a href="#faq" className="no-underline transition hover:text-[#2f2c28]">
+                    Need Help?
+                  </a>
+                  <a href="#profile" className="no-underline transition hover:text-[#2f2c28]">
+                    Login/SignUp
+                  </a>
+                </nav>
+              </div>
             </div>
+          )}
+
+          {!useConsultDesktopHeader ? (
+            <div className="px-4 pb-6 pt-10 text-center lg:px-12">
+              <p
+                className="mb-2 text-[clamp(2rem,4.5vw,2.875rem)] font-normal normal-case leading-[1.42] text-[#FC5000]"
+                style={{ fontFamily: 'HolidayFree, Caveat, cursive' }}
+              >
+                Happie Happie Oye!
+              </p>
+              <h1 className="mx-auto max-w-4xl font-display text-[clamp(2.75rem,5vw,4rem)] font-bold uppercase leading-[1.42] tracking-[-0.02em] text-[#1F1F1F]">
+                Because care should feel good.
+              </h1>
+            </div>
+          ) : (
+            <div className="pb-4 pt-8 lg:pt-10" aria-hidden />
+          )}
+
+
+          <div
+            id="booking"
+            className={cn(
+              'mx-auto max-w-[1180px] rounded-[34px] border p-4 shadow-[0_30px_60px_rgba(57,46,25,0.08)] backdrop-blur lg:p-5',
+              isDoctorHeader || isNurseHeader || isLabHeader ? 'border-white/60 bg-white/95' : 'border-white/80 bg-white/92',
+            )}
+          >
+            <div className={cn('flex flex-wrap gap-2', consultTabTheme && 'rounded-t-2xl bg-[#ececec] p-2')}>
+              {searchTabs.map((tab) => {
+                const selected = selectedServiceKind === tab.kind
+                const theme = consultTabTheme
+                return (
+                  <button
+                    key={tab.kind}
+                    type="button"
+                    onClick={() => selectBookingTab(tab.kind)}
+                    className={cn(
+                      'min-h-11 rounded-2xl px-4 text-sm font-bold transition',
+                      selected
+                        ? theme === 'doctor'
+                          ? 'bg-[#F8BFE3] text-[#9D497E] shadow-[0_8px_20px_rgba(248,191,227,0.45)]'
+                          : theme === 'nurse'
+                            ? 'bg-[#C5EFE3] text-[#0F6B57] shadow-[0_8px_22px_rgba(15,107,87,0.2)]'
+                            : theme === 'lab'
+                              ? 'bg-[#FFF3C4] text-[#713F12] shadow-[0_8px_22px_rgba(180,119,0,0.22)]'
+                              : 'bg-[#9D497E] text-white shadow-[0_10px_24px_rgba(157,73,126,0.35)]'
+                        : theme === 'doctor' || theme === 'nurse' || theme === 'lab'
+                          ? 'border border-[#e8e8e8] bg-white text-[#1F1F1F] hover:bg-[#fafafa]'
+                          : 'bg-[#E4E4E4] text-[#1F1F1F] hover:bg-[#dadada]',
+                    )}
+                  >
+                    {tab.label}
+                  </button>
+                )
+              })}
+            </div>
+
+            {selectedServiceKind === 'doctor' && activeTab === 'doctor' ? (
+              <ConsultDoctorHero
+                frameSrc={doctorBgFrameSrc}
+                characterSrc={doctorCharacterSrc}
+                onBookNow={() => openBookingResults('doctor', buildPayload('doctor'))}
+              />
+            ) : null}
+            {selectedServiceKind === 'nurse' && activeTab === 'nurse' ? (
+              <ConsultNurseHero
+                frameSrc={nurseBgFrameSrc}
+                characterSrc={nurseCharacterSrc}
+                onBookNow={() => openBookingResults('nurse', buildPayload('nurse'))}
+              />
+            ) : null}
+            {selectedServiceKind === 'lab' && activeTab === 'lab' ? (
+              <ConsultLabHero
+                frameSrc={labBgFrameSrc}
+                characterSrc={labCharacterSrc}
+                onBookNow={() => openBookingResults('lab', buildPayload('lab'))}
+              />
+            ) : null}
 
             <div className="mt-4 grid gap-3 lg:grid-cols-[1.2fr_1fr_1fr_0.9fr_0.9fr_auto]">
               <SearchField
@@ -880,29 +890,49 @@ export function LandingPage() {
             </div>
           </div>
         </div>
-      </header>
+        </header>
+      </div>
+
+      {/* Torn / wave transition between hero and Quick Services (Figma). */}
+      <div className="relative z-10 hidden w-full overflow-x-clip md:block">
+        <img
+          src={heroBottomWaveSrc}
+          alt=""
+          width={1440}
+          height={153}
+          decoding="async"
+          className="pointer-events-none mx-auto block h-auto w-full max-w-[1440px]"
+          aria-hidden
+        />
+      </div>
 
       <main className="relative z-10 pb-24 md:pb-12">
-        <section id="services" className="px-4 pt-2 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-[1200px]">
-            <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-              <div className="max-w-[782px]">
+        {bookingSearchKind ? (
+          <section id="booking-results" className="px-4 pt-14 sm:px-6 lg:px-8">
+            <BookDoctorSection bookingSearchKind={bookingSearchKind} heroSearchSnapshot={heroSearchSnapshot} />
+          </section>
+        ) : (
+          <>
+        <section id="services" className="relative z-10 bg-white px-4 pb-2 pt-4 sm:px-6 sm:pt-6 lg:px-8">
+          <div className="mx-auto flex max-w-[1200px] flex-col gap-[34px]">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div className="relative z-20 w-full max-w-[782px]">
                 <p
-                  className="mb-[6px] text-[clamp(2.35rem,4vw,2.875rem)] font-normal normal-case leading-[1.08] text-[#FC5000]"
+                  className="mb-0 pl-3 text-left text-[clamp(2rem,6vw,46px)] font-normal normal-case leading-[1.42] text-[#FC5000]"
                   style={{ fontFamily: 'HolidayFree, Caveat, cursive' }}
                 >
                   Quick Services
                 </p>
-                <h2 className="mb-0 max-w-[782px] text-left text-[clamp(2.5rem,5vw,4.75rem)] leading-[1.02] tracking-[-0.03em] text-[#1F1F1F]">
+                <h2 className="mb-0 mt-6 max-w-[782px] text-balance text-left font-display text-[clamp(1.75rem,5.5vw,56px)] font-bold uppercase leading-[1.42] text-[#1F1F1F] lg:mt-[37px]">
                   Book what you need in one tap.
                 </h2>
               </div>
 
               <a
                 href="#appointment"
-                className="inline-flex w-fit min-w-[190px] items-center justify-end gap-[10px] self-start border-b border-[#E4E4E4] px-0 py-[10px] text-base font-black uppercase text-[#8D8D8D] no-underline lg:self-end"
+                className="inline-flex w-fit min-w-0 items-center justify-end gap-[10px] self-start border-b border-[#E4E4E4] px-0 py-[10px] text-[16px] font-black uppercase leading-[1.4] tracking-normal text-[#8D8D8D] no-underline lg:self-end"
               >
-                <span style={{ fontFamily: 'Satoshi Variable, Satoshi, sans-serif' }}>VIEW MORE</span>
+                <span className="font-sans">VIEW MORE</span>
                 <span className="relative inline-flex h-4 w-[26px] items-center justify-center rounded-[34px] bg-[#8D8D8D]">
                   <svg className="h-[10px] w-[10px]" viewBox="0 0 10 10" fill="none" aria-hidden>
                     <path d="M4 2L7 5L4 8" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
@@ -911,14 +941,14 @@ export function LandingPage() {
               </a>
             </div>
 
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4 xl:gap-[30px]">
-              {quickServices.map((card, index) => (
+            <div className="relative z-10 grid grid-cols-1 justify-items-center gap-[30px] sm:grid-cols-2 xl:grid-cols-4">
+              {quickServices.map((card) => (
                 <article
                   key={card.title}
-                  className="relative min-h-[360px] overflow-hidden rounded-[12px] border border-[#E4E4E4] bg-white shadow-[0_0_0_1px_rgba(228,228,228,0.2)]"
+                  className="relative isolate h-[360px] w-full max-w-[278px] overflow-hidden rounded-[12px] border border-[#E4E4E4] bg-white"
                 >
                   <svg
-                    className="pointer-events-none absolute inset-x-0 bottom-0 h-[144px] w-full"
+                    className="pointer-events-none absolute left-0 top-[217px] h-[144px] w-full"
                     viewBox="0 0 278 144"
                     fill="none"
                     preserveAspectRatio="none"
@@ -927,68 +957,42 @@ export function LandingPage() {
                     <path d="M60.7126 33.9512L278 0V72.8616V144H0L60.7126 33.9512Z" fill={card.accent} fillOpacity="0.2" />
                   </svg>
 
-                  <div className="relative z-10 flex h-full flex-col px-4 pb-0 pt-4">
-                    <div className="flex min-h-[170px] w-full max-w-[254px] flex-col items-start gap-[14px]">
-                      <div className="flex flex-col items-start gap-1 self-stretch">
-                        <h3 className="mb-0 text-[24px] font-black uppercase leading-[1.22] tracking-[-0.02em] text-[#1F1F1F]">
-                          {card.title}
-                        </h3>
-                        <p className="mb-0 max-w-[248px] text-[18px] font-normal capitalize leading-[1.12] text-[#8D8D8D]">
-                          {card.description}
-                        </p>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => openBookingResults(card.kind)}
-                        className="inline-flex min-h-[50px] items-center justify-center rounded-[8px] bg-[#1F1F1F] px-[34px] text-[16px] font-bold capitalize text-white transition hover:bg-[#111111]"
-                      >
-                        Book now
-                      </button>
+                  <div className="absolute left-3 top-3 z-10 flex w-[254px] flex-col gap-[14px]">
+                    <div className="flex flex-col gap-1">
+                      <h3 className="mb-0 font-sans text-[24px] font-black uppercase leading-[1.4] text-[#1F1F1F]">
+                        {card.title}
+                      </h3>
+                      <p className="mb-0 max-w-[254px] font-sans text-[18px] font-normal capitalize leading-[1.2] text-[#8D8D8D]">
+                        {card.description}
+                      </p>
                     </div>
-
-                    <div
-                      className={cn(
-                        'relative mt-auto flex min-h-[190px] items-end justify-center overflow-visible',
-                        index === 0 && 'justify-center',
-                        index === 1 && 'justify-end pr-0',
-                        index === 2 && 'justify-center',
-                        index === 3 && 'justify-end pr-2',
-                      )}
+                    <button
+                      type="button"
+                      onClick={() => openBookingResults(card.kind)}
+                      className="inline-flex items-center justify-center self-start rounded-lg bg-[#1F1F1F] px-6 py-3.5 font-sans text-[16px] font-bold capitalize leading-[1.4] text-white transition hover:bg-[#111111]"
                     >
-                      {index === 1 ? (
-                        <>
-                          <svg
-                            className="absolute left-1 top-[74px] h-[13px] w-[10px]"
-                            viewBox="0 0 10 13"
-                            fill="none"
-                            aria-hidden
-                          >
-                            <path d="M9.68061 12.2281V0L0 12.2281H9.68061Z" fill="#D6DAED" />
-                          </svg>
-                          <img
-                            src={card.image}
-                            alt={card.imageAlt ?? ''}
-                            className={cn('relative z-10 translate-x-4', card.imageClassName)}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        </>
-                      ) : (
-                        <img
-                          src={card.image}
-                          alt={card.imageAlt ?? ''}
-                          className={cn(
-                            'relative z-10',
-                            index === 2 && 'translate-y-3',
-                            index === 3 && 'translate-x-2 translate-y-1',
-                            card.imageClassName,
-                          )}
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      )}
-                    </div>
+                      Book now
+                    </button>
+                  </div>
+
+                  <div className={cn(card.artSlotClassName, 'z-[1]')}>
+                    {card.consultCorner ? (
+                      <svg
+                        className="pointer-events-none absolute left-0 top-[205px] h-[13px] w-[10px]"
+                        viewBox="0 0 10 13"
+                        fill="none"
+                        aria-hidden
+                      >
+                        <path d="M9.68061 12.2281V0L0 12.2281H9.68061Z" fill="#D6DAED" />
+                      </svg>
+                    ) : null}
+                    <img
+                      src={card.image}
+                      alt={card.imageAlt ?? ''}
+                      className={card.imageClassName}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
                 </article>
               ))}
@@ -1328,14 +1332,11 @@ export function LandingPage() {
           </div>
         </section>
 
-        {bookingSearchKind ? (
-          <section id="booking-results" className="px-4 pt-14 sm:px-6 lg:px-8">
-            <BookDoctorSection bookingSearchKind={bookingSearchKind} heroSearchSnapshot={heroSearchSnapshot} />
-          </section>
-        ) : null}
+          </>
+        )}
       </main>
 
-      <footer className="relative z-10 mt-12 overflow-hidden border border-[#E4E4E4] bg-[#FEFAE7] px-4 pb-[calc(5.75rem+env(safe-area-inset-bottom))] pt-10 sm:px-6 lg:px-8">
+      <footer className="relative z-10 mt-12 overflow-hidden border border-[#E4E4E4] bg-white px-4 pb-[calc(5.75rem+env(safe-area-inset-bottom))] pt-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-[1200px]">
           <div className="grid gap-10 md:grid-cols-2 xl:grid-cols-4">
             {footerGroups.map((group) => (
@@ -1410,16 +1411,12 @@ export function LandingPage() {
             </svg>
             Home
           </a>
-          <button
-            type="button"
-            onClick={() => openBookingResults(activeTab)}
-            className="flex min-h-[54px] min-w-[84px] flex-col items-center justify-center gap-1 border-0 bg-transparent text-[11px] font-bold text-[#a7a093]"
-          >
+          <a href="#booking" className="flex min-h-[54px] min-w-[84px] flex-col items-center justify-center gap-1 text-[11px] font-bold text-[#a7a093] no-underline">
             <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.9}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 3.5v3M18 3.5v3M4.5 8.5h15M5 5.5h14a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1Z" />
             </svg>
             My Booking
-          </button>
+          </a>
           <a href="#profile" className="flex min-h-[54px] min-w-[84px] flex-col items-center justify-center gap-1 text-[11px] font-bold text-[#a7a093] no-underline">
             <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.9}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0" />

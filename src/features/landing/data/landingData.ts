@@ -84,6 +84,18 @@ export const consultDoctorHeroCopy = {
     'Search And Book Appointments With Experienced Doctors Near You Or Consult Online.',
 } as const
 
+/** Figma Book Nurse — Frame 2147235729 (consulting strip + hero). */
+export const consultNurseHeroCopy = {
+  headline: 'PROFESSIONAL NURSING CARE AT HOME',
+  subheadline: 'Book trained nurses for medical care, recovery support, and daily assistance.',
+} as const
+
+/** Figma Book Lab — Frame 2147235726 (consulting strip + hero). */
+export const consultLabHeroCopy = {
+  headline: 'FAST & RELIABLE LAB TESTS FROM CERTIFIED LABS',
+  subheadline: 'Find the right health tests and get samples collected safely from your home.',
+} as const
+
 /** Homecare / Book Nurse hero — text overlays `public/Homecare Theme.svg` (Figma Book Nurse). */
 export const homecareThemeHero = {
   eyebrow: 'Happie Happie Oye!',
