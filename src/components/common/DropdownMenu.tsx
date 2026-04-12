@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
 
-import { setBookingIntent } from '@/features/landing/utils/landingBookingIntent'
+import { setBookingIntent } from '@/utils/bookingIntent'
 import { cn } from '@/utils/cn'
 
 export type DropdownItem = {
