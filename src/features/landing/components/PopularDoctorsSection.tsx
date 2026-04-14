@@ -7,7 +7,7 @@ import { cn } from '@/utils/cn'
 type PopularDoctorsSectionProps = {
   doctors: HeroDoctorCardData[]
   onBook: () => void
-  variant?: 'default' | 'doctor' | 'nurse'
+  variant?: 'default' | 'doctor' | 'nurse' | 'lab'
   title?: string
   buttonLabel?: string
   featuredCtaLabel?: string
@@ -24,7 +24,7 @@ function ViewMoreButton({
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center gap-[10px] border-0 border-b border-[#E4E4E4] bg-transparent px-0 py-[10px] text-[16px] font-black uppercase leading-[1.4] tracking-[0.02em] text-[#8D8D8D]"
+      className="inline-flex items-center gap-2 border-0 border-b border-[#E4E4E4] bg-transparent px-0 py-2 text-[0.875rem] font-black uppercase leading-[1.4] tracking-[0.02em] text-[#8D8D8D]"
     >
       {label}
       <span className="relative inline-flex h-4 w-[26px] items-center justify-center rounded-full bg-[#8D8D8D]">
@@ -63,6 +63,14 @@ export function PopularDoctorsSection({
             buttonLabel: 'View All Nurses',
             featuredCtaLabel: 'Book Service',
           }
+        : variant === 'lab'
+          ? {
+              eyebrowColor: '#B68000',
+              indicatorColor: '#B68000',
+              title: 'Trusted Diagnostic Labs',
+              buttonLabel: 'View All Labs',
+              featuredCtaLabel: 'Book Lab Test',
+            }
         : {
             eyebrowColor: '#FC5000',
             indicatorColor: '#FC5000',
@@ -75,7 +83,8 @@ export function PopularDoctorsSection({
   const indicatorOffset = isWideVariant ? 0 : 1.25
   const indicatorTravel = 100 - indicatorWidth - indicatorOffset
   const indicatorLeft = indicatorOffset + indicatorTravel * scrollProgress
-  const headingWidthClassName = variant === 'nurse' ? 'max-w-[744px]' : 'max-w-[692px]'
+  const headingWidthClassName =
+    variant === 'nurse' ? 'max-w-[744px]' : variant === 'lab' ? 'max-w-[628px]' : 'max-w-[692px]'
 
   useEffect(() => {
     const node = carouselRef.current
@@ -102,17 +111,17 @@ export function PopularDoctorsSection({
 
   if (isWideVariant) {
     return (
-      <section className="px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-[1200px]">
-          <div className="mb-[30px] flex flex-wrap items-end justify-between gap-6">
+      <section className="py-10 sm:py-12">
+        <div className="app-container">
+          <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
             <div className={headingWidthClassName}>
               <p
-                className="mb-1 text-[clamp(1.75rem,4vw,2.875rem)] font-normal leading-[1.42]"
+                className="mb-1 text-[clamp(1.15rem,2.2vw,1.75rem)] font-normal leading-[1.25]"
                 style={{ color: theme.eyebrowColor, fontFamily: 'HolidayFree, Caveat, cursive' }}
               >
                 Meet Our Heroes
               </p>
-              <h2 className="font-display text-[clamp(2.4rem,5vw,3.5rem)] font-bold uppercase leading-[1.42] text-[#1F1F1F]">
+              <h2 className="font-display text-[clamp(1.45rem,2.8vw,2.25rem)] font-bold uppercase leading-[1.1] text-[#1F1F1F]">
                 {title ?? theme.title}
               </h2>
             </div>
@@ -120,7 +129,7 @@ export function PopularDoctorsSection({
           </div>
 
           <div className="relative">
-            <div ref={carouselRef} className="flex gap-[30px] overflow-x-auto pb-8 scrollbar-hide">
+            <div ref={carouselRef} className="flex gap-4 overflow-x-auto pb-6 scrollbar-hide md:gap-5">
               {doctors.map((doctor, index) => (
                 <DoctorNetworkCard
                   key={`${doctor.name}-${index}`}
@@ -144,20 +153,20 @@ export function PopularDoctorsSection({
   }
 
   return (
-    <section className="mt-32">
-      <div className="mb-10 text-center">
+    <section className="app-container mt-20 md:mt-24">
+      <div className="mb-8 text-center">
         <p
-          className="mb-1 text-[clamp(1.5rem,3.5vw,2.25rem)] font-normal normal-case leading-none text-[#FC5000]"
+          className="mb-1 text-[clamp(1.2rem,2.5vw,1.85rem)] font-normal normal-case leading-none text-[#FC5000]"
           style={{ fontFamily: 'HolidayFree, Caveat, cursive' }}
         >
           Meet Our Heroes
         </p>
-        <h2 className="font-display text-[clamp(2.25rem,5vw,3.5rem)] font-bold uppercase tracking-tight text-[#1F1F1F]">
+        <h2 className="font-display text-[clamp(1.6rem,3.2vw,2.5rem)] font-bold uppercase tracking-tight text-[#1F1F1F]">
           Book An Appointment
         </h2>
       </div>
       <div className="relative overflow-hidden">
-        <div ref={carouselRef} className="flex gap-6 overflow-x-auto pb-8 scrollbar-hide">
+        <div ref={carouselRef} className="flex gap-4 overflow-x-auto pb-6 scrollbar-hide md:gap-5">
           {doctors.map((doctor, index) => (
             <DoctorNetworkCard
               key={`${doctor.name}-${index}`}

@@ -14,8 +14,8 @@ export function BookingResultsPage({
 
   return (
     <div className="bg-white">
-      <section className="px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <div id="booking-results" className="mx-auto max-w-[1200px]">
+      <section className="py-10 sm:py-14">
+        <div id="booking-results" className="app-container">
           <BookDoctorSection
             bookingSearchKind={bookingSearchKind}
             heroSearchSnapshot={heroSearchSnapshot}

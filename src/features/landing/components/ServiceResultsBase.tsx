@@ -19,18 +19,18 @@ export function ServiceResultsBase({
   isLoading,
 }: ServiceResultsBaseProps) {
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(260px,320px)_minmax(0,1fr)] lg:items-start lg:gap-8">
+    <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-[minmax(13.5rem,16rem)_minmax(0,1fr)] lg:items-start lg:gap-6">
       {/* Sidebar - Desktop */}
       <aside className="hidden lg:block lg:sticky lg:top-24 lg:self-start">
         {sidebarContent}
       </aside>
 
       {/* Main Content */}
-      <div className="min-w-0 space-y-4">
+      <div className="min-w-0 space-y-3.5">
         {/* Header / Info Line */}
         {exploreLine && (
           <div className="mb-2 flex items-center justify-between">
-            <h2 className="text-xl font-black text-[#1F1F1F] md:text-2xl">
+            <h2 className="text-[1.02rem] font-extrabold text-[#1F1F1F] md:text-[1.2rem]">
               {exploreLine} {city ? <span className="text-[#33579f]">{city}</span> : null}
             </h2>
           </div>
@@ -44,7 +44,7 @@ export function ServiceResultsBase({
         )}
 
         {/* Results Area */}
-        <div className={cn('relative min-h-[400px]', isLoading && 'opacity-50 pointer-events-none')}>
+        <div className={cn('relative min-h-[22rem]', isLoading && 'opacity-50 pointer-events-none')}>
           {children}
         </div>
       </div>

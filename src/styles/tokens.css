@@ -1,9 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Oswald:wght@400;500;700&family=Satoshi:wght@400;500;700;900&display=swap');
 
 :root {
-  --color-ink: #1f1f1f;
-  --color-muted: #6f6f6f;
-  --color-orange: #f85001;
-  --color-cream: #fefae7;
-  --color-bg: #fffdf8;
+  --page-gutter: clamp(0.75rem, 0.45rem + 2.2vw, 1.25rem);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
 }

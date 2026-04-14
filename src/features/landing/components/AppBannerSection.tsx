@@ -11,9 +11,14 @@ const nurseBannerAssets = {
   rightPhone: 'https://api.builder.io/api/v1/image/assets/TEMP/9c44c1ec77563142202de1d2180c3ee816e84272?width=706',
   sticker: 'https://api.builder.io/api/v1/image/assets/TEMP/d0459611f0c1f5385f876f2913d641fe19236ac8?width=212',
 } as const
+const labBannerAssets = {
+  leftPhone: 'https://api.builder.io/api/v1/image/assets/TEMP/9a15e259d3877b7af99817e10cdd59813c7f0929?width=706',
+  rightPhone: 'https://api.builder.io/api/v1/image/assets/TEMP/fa26f0cd10e9050c23da5624aa63fd5b9552bec1?width=706',
+  sticker: 'https://api.builder.io/api/v1/image/assets/TEMP/f96bc7e4b8de5f40fa2037097073c7bb13e5650d?width=212',
+} as const
 
 type AppBannerSectionProps = {
-  variant?: 'default' | 'doctor' | 'nurse'
+  variant?: 'default' | 'doctor' | 'nurse' | 'lab'
 }
 
 export function AppBannerSection({ variant = 'default' }: AppBannerSectionProps) {
@@ -34,13 +39,21 @@ export function AppBannerSection({ variant = 'default' }: AppBannerSectionProps)
             buttonClassName: 'bg-[#007954] hover:bg-[#006247]',
             assets: nurseBannerAssets,
           }
+        : variant === 'lab'
+          ? {
+              outerBackground: 'bg-[linear-gradient(105deg,#B68000_7.9%,#FFF3D8_85.72%)]',
+              innerBackground: 'bg-[#FFF3D8]',
+              textColor: '#B68000',
+              buttonClassName: 'bg-[#B68000] hover:bg-[#9d7000]',
+              assets: labBannerAssets,
+            }
         : null
 
   if (themedVariant) {
     return (
-      <section className="px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-        <div className={cn('mx-auto max-w-[1200px] overflow-hidden rounded-[22px] p-4', themedVariant.outerBackground)}>
-          <div className={cn('relative min-h-[340px] overflow-hidden rounded-[12px] px-6 py-10 sm:px-10 lg:min-h-[466px] lg:px-10 lg:py-[50px]', themedVariant.innerBackground)}>
+      <section className="py-10 sm:py-12">
+        <div className={cn('app-container overflow-hidden rounded-[18px] p-2.5', themedVariant.outerBackground)}>
+          <div className={cn('relative min-h-[220px] overflow-hidden rounded-[12px] px-4 py-5 sm:px-5 lg:min-h-[280px] lg:px-5 lg:py-6', themedVariant.innerBackground)}>
             <svg
               className="pointer-events-none absolute left-[-172px] top-[-168px] h-[1455px] w-[2322px] opacity-[0.08]"
               viewBox="0 0 2322 1455"
@@ -64,17 +77,17 @@ export function AppBannerSection({ variant = 'default' }: AppBannerSectionProps)
               ))}
             </svg>
 
-            <div className="relative z-10 flex min-h-[260px] items-start lg:min-h-[366px]">
-              <div className="max-w-[560px]">
-                <div className="space-y-2.5">
+            <div className="relative z-10 flex min-h-[190px] items-start lg:min-h-[230px]">
+              <div className="max-w-[400px]">
+                <div className="space-y-2">
                   <h2
-                    className="font-display text-[clamp(2.5rem,5vw,3.75rem)] font-bold uppercase leading-[1.2]"
+                    className="font-display text-[clamp(1.5rem,2.8vw,2.35rem)] font-bold uppercase leading-[1.08]"
                     style={{ color: themedVariant.textColor }}
                   >
                     Smarter Healthcare in Your Pocket
                   </h2>
                   <p
-                    className="max-w-[560px] text-[clamp(1rem,2.3vw,1.375rem)] leading-[1.2]"
+                    className="max-w-[400px] text-[clamp(0.85rem,1.35vw,1rem)] leading-[1.3]"
                     style={{ color: themedVariant.textColor }}
                   >
                     Stay informed and in control. From symptom tracking to personalized care insights
@@ -85,7 +98,7 @@ export function AppBannerSection({ variant = 'default' }: AppBannerSectionProps)
                 <button
                   type="button"
                   className={cn(
-                    'mt-10 inline-flex min-h-[62px] items-center justify-center rounded-xl px-[30px] py-5 text-base font-bold leading-[1.4] text-white transition',
+                    'mt-6 inline-flex min-h-[46px] items-center justify-center rounded-xl px-5 py-3 text-[0.8125rem] font-bold leading-[1.4] text-white transition',
                     themedVariant.buttonClassName,
                   )}
                 >
@@ -94,24 +107,24 @@ export function AppBannerSection({ variant = 'default' }: AppBannerSectionProps)
               </div>
             </div>
 
-            <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[48%] lg:block">
+            <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[42%] lg:block">
               <img
                 src={themedVariant.assets.leftPhone}
                 alt=""
                 aria-hidden
-                className="absolute left-[-10px] top-[100px] h-[410px] w-[353px] -rotate-[13.279deg] rounded-[20px] object-cover"
+                className="absolute left-[8px] top-[64px] h-[236px] w-[202px] -rotate-[13.279deg] rounded-[16px] object-cover"
               />
               <img
                 src={themedVariant.assets.rightPhone}
                 alt=""
                 aria-hidden
-                className="absolute left-[153px] top-[49px] h-[453px] w-[353px] rotate-[7.039deg] rounded-[20px] object-cover shadow-[-10px_0_20px_rgba(0,0,0,0.25)]"
+                className="absolute left-[96px] top-[28px] h-[268px] w-[210px] rotate-[7.039deg] rounded-[16px] object-cover shadow-[-10px_0_20px_rgba(0,0,0,0.22)]"
               />
               <img
                 src={themedVariant.assets.sticker}
                 alt=""
                 aria-hidden
-                className="absolute left-[131px] top-[83px] h-[114px] w-[106px] -rotate-[8.265deg] object-contain"
+                className="absolute left-[82px] top-[54px] h-[64px] w-[58px] -rotate-[8.265deg] object-contain"
               />
             </div>
           </div>
@@ -121,9 +134,9 @@ export function AppBannerSection({ variant = 'default' }: AppBannerSectionProps)
   }
 
   return (
-    <section className="px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-      <div className="mx-auto max-w-[1200px] rounded-[22px] bg-[#ECE6F6] p-4">
-        <div className="relative min-h-[300px] overflow-hidden rounded-[12px] sm:min-h-[360px] lg:min-h-[466px]">
+    <section className="py-10 sm:py-12">
+      <div className="app-container rounded-[18px] bg-[#ECE6F6] p-2.5">
+        <div className="relative min-h-[210px] overflow-hidden rounded-[12px] sm:min-h-[260px] lg:min-h-[290px]">
           <img
             src={appBannerBackgroundSrc}
             alt=""
@@ -131,13 +144,13 @@ export function AppBannerSection({ variant = 'default' }: AppBannerSectionProps)
             className="absolute inset-0 h-full w-full object-cover object-center"
           />
 
-          <div className="relative z-10 flex min-h-[300px] items-start px-6 py-10 sm:min-h-[360px] sm:px-10 sm:py-14 lg:min-h-[466px] lg:px-10 lg:py-[71px]">
-            <div className={cn('max-w-[560px]')}>
-              <div className="space-y-2.5">
-                <h2 className="font-display text-[clamp(2.5rem,5vw,3.75rem)] font-bold uppercase leading-[1.2] text-white">
+          <div className="relative z-10 flex min-h-[210px] items-start px-4 py-5 sm:min-h-[260px] sm:px-5 sm:py-6 lg:min-h-[290px] lg:px-5 lg:py-7">
+            <div className={cn('max-w-[400px]')}>
+              <div className="space-y-2">
+                <h2 className="font-display text-[clamp(1.5rem,2.8vw,2.35rem)] font-bold uppercase leading-[1.08] text-white">
                   Smarter Healthcare in Your Pocket
                 </h2>
-                <p className="max-w-[560px] text-[clamp(1rem,2.3vw,1.375rem)] leading-[1.2] text-white">
+                <p className="max-w-[400px] text-[clamp(0.85rem,1.35vw,1rem)] leading-[1.3] text-white">
                   Stay informed and in control. From symptom tracking to personalized care insights
                   everything you need, right on your phone.
                 </p>
@@ -145,7 +158,7 @@ export function AppBannerSection({ variant = 'default' }: AppBannerSectionProps)
 
               <button
                 type="button"
-                className="mt-10 inline-flex min-h-[62px] items-center justify-center rounded-xl bg-[#FC5000] px-[30px] py-5 text-base font-bold leading-[1.4] text-white transition hover:bg-[#e84900]"
+                className="mt-6 inline-flex min-h-[46px] items-center justify-center rounded-xl bg-[#FC5000] px-5 py-3 text-[0.8125rem] font-bold leading-[1.4] text-white transition hover:bg-[#e84900]"
               >
                 Download Now
               </button>

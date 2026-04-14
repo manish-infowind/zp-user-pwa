@@ -30,7 +30,7 @@ function ToggleSectionButton({
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center gap-[10px] border-0 border-b border-[#E4E4E4] bg-transparent px-0 py-[10px] text-[16px] font-black uppercase leading-[1.4] tracking-[0.02em] text-[#8D8D8D]"
+      className="inline-flex items-center gap-2 border-0 border-b border-[#E4E4E4] bg-transparent px-0 py-2 text-[0.875rem] font-black uppercase leading-[1.4] tracking-[0.02em] text-[#8D8D8D]"
     >
       {expanded ? 'View Less' : 'View More'}
       <span className="relative inline-flex h-4 w-[26px] items-center justify-center rounded-full bg-[#8D8D8D]">
@@ -63,15 +63,15 @@ function DoctorSectionHeading({
   onToggle?: () => void
 }) {
   return (
-    <div className="mb-[30px] flex flex-wrap items-end justify-between gap-6">
+    <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
       <div className={cn('max-w-[693px]', maxWidthClassName)}>
         <p
-          className="mb-1 text-[clamp(1.75rem,4vw,2.875rem)] font-normal leading-[1.42] text-[#9D497E]"
+          className="mb-1 text-[clamp(1.15rem,2.2vw,1.75rem)] font-normal leading-[1.25] text-[#9D497E]"
           style={{ fontFamily: 'HolidayFree, Caveat, cursive' }}
         >
           {eyebrow}
         </p>
-        <h2 className="font-display text-[clamp(2.4rem,5vw,3.5rem)] font-bold uppercase leading-[1.42] text-[#1F1F1F]">
+        <h2 className="font-display text-[clamp(1.45rem,2.8vw,2.25rem)] font-bold uppercase leading-[1.1] text-[#1F1F1F]">
           {title}
         </h2>
       </div>
@@ -85,8 +85,8 @@ function DoctorSpecialtiesSection({ onViewDoctors }: { onViewDoctors: () => void
   const visibleCards = isExpanded ? popularDoctorSpecialtyCards : consultingSpecialtyCards
 
   return (
-    <section id="services" className="px-4 pt-16 sm:px-6 sm:pt-20 lg:px-8">
-      <div className="mx-auto max-w-[1200px]">
+    <section id="services" className="pt-10 sm:pt-12">
+      <div className="app-container">
         <DoctorSectionHeading
           eyebrow={isExpanded ? 'Meet Our Heroes' : 'Meet Your Care Experts'}
           title={isExpanded ? 'Popular Doctor Specialties' : 'Doctor Specialties'}
@@ -96,22 +96,22 @@ function DoctorSpecialtiesSection({ onViewDoctors }: { onViewDoctors: () => void
           onToggle={() => setIsExpanded((current) => !current)}
         />
 
-        <div className="grid gap-[30px] md:grid-cols-2 xl:grid-cols-4">
-          {visibleCards.map((specialty) => (
+        <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {visibleCards.map((specialty, index) => (
             <article
-              key={specialty.specialtyLabel}
+              key={`${specialty.specialtyLabel}-${index}`}
               className={cn(
-                'overflow-hidden rounded-[12px] border px-2 pb-5 pt-5 text-center',
+                'max-w-full overflow-hidden rounded-[12px] border px-2 pb-4 pt-4 text-center',
                 specialty.borderClass,
                 specialty.bgClass,
               )}
             >
-              <div className="mx-auto flex max-w-[270px] flex-col items-center gap-3">
-                <div className="space-y-2.5">
-                  <p className={cn('text-[20px] font-medium leading-none', specialty.textClass)}>
+              <div className="mx-auto flex max-w-[240px] flex-col items-center gap-2.5">
+                <div className="space-y-1.5">
+                  <p className={cn('text-[15px] font-medium leading-none', specialty.textClass)}>
                     {specialty.categoryLabel}
                   </p>
-                  <h3 className={cn('text-[30px] font-bold leading-none', specialty.textClass)}>
+                  <h3 className={cn('text-[1.05rem] font-bold leading-none', specialty.textClass)}>
                     {specialty.specialtyLabel}
                   </h3>
                 </div>
@@ -120,12 +120,12 @@ function DoctorSpecialtiesSection({ onViewDoctors }: { onViewDoctors: () => void
                   <img
                     src={specialty.image}
                     alt={specialty.specialtyLabel}
-                    className={cn('mx-auto', specialty.imageClassName ?? 'h-[230px] w-full object-contain')}
+                    className={cn('mx-auto', specialty.imageClassName ?? 'h-[188px] w-full object-contain')}
                     loading="lazy"
                     decoding="async"
                   />
                   <div
-                    className="mx-auto -mt-4 h-7 w-[250px] rounded-full blur-[11px]"
+                    className="mx-auto -mt-3 h-6 w-[210px] rounded-full blur-[10px]"
                     style={{ backgroundColor: specialty.shadowColor ?? '#DA9D9D', opacity: 0.35 }}
                   />
                 </div>
@@ -139,10 +139,10 @@ function DoctorSpecialtiesSection({ onViewDoctors }: { onViewDoctors: () => void
                     }
                     onViewDoctors()
                   }}
-                  className="inline-flex items-center gap-[14px] rounded-[8px] bg-[#1F1F1F] px-6 py-3 text-[18px] font-bold capitalize leading-[1.4] text-white transition hover:bg-[#333538]"
+                  className="inline-flex items-center gap-2 rounded-[8px] bg-[#1F1F1F] px-4 py-2 text-[0.8125rem] font-bold capitalize leading-[1.4] text-white transition hover:bg-[#333538]"
                 >
                   View Doctors
-                  <svg className="size-6" viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <svg className="size-5" viewBox="0 0 24 24" fill="none" aria-hidden>
                     <path d="M20 12H4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M15 17C15 17 20 13.3176 20 12C20 10.6824 15 7 15 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -161,8 +161,8 @@ function DoctorSymptomsSection({ onOpenDoctor }: { onOpenDoctor: () => void }) {
   const visibleSymptoms = isExpanded ? popularDoctorSymptoms : doctorLandingSymptoms
 
   return (
-    <section className="px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-      <div className="mx-auto max-w-[1200px]">
+    <section className="py-10 sm:py-12">
+      <div className="app-container">
         <DoctorSectionHeading
           eyebrow={isExpanded ? 'Meet Our Heroes' : 'Find the Right Doctor'}
           title="Consult for symptons"
@@ -172,19 +172,19 @@ function DoctorSymptomsSection({ onOpenDoctor }: { onOpenDoctor: () => void }) {
           onToggle={() => setIsExpanded((current) => !current)}
         />
 
-        <div className="grid gap-[30px] md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {visibleSymptoms.map((symptom) => (
             <article
               key={symptom.title}
-              className="rounded-[12px] border"
+              className="max-w-full rounded-[12px] border"
               style={{ borderColor: symptom.borderColor, backgroundColor: symptom.bgColor }}
             >
-              <div className="flex min-h-[220px] flex-col gap-5 px-5 py-6">
-                <div className="flex items-start justify-between gap-5">
+              <div className="flex min-h-[168px] flex-col gap-3 px-4 py-4">
+                <div className="flex items-start justify-between gap-4">
                   <img
                     src={symptom.image}
                     alt={symptom.title}
-                    className="size-[100px] object-contain"
+                    className="size-[72px] object-contain"
                     loading="lazy"
                     decoding="async"
                   />
@@ -197,21 +197,21 @@ function DoctorSymptomsSection({ onOpenDoctor }: { onOpenDoctor: () => void }) {
                       }
                       onOpenDoctor()
                     }}
-                    className="inline-flex h-10 w-[50px] items-center justify-center rounded-[8px] bg-[#1F1F1F] text-white transition hover:bg-[#333538]"
+                    className="inline-flex h-8 w-10 items-center justify-center rounded-[8px] bg-[#1F1F1F] text-white transition hover:bg-[#333538]"
                     aria-label={`Consult for ${symptom.title}`}
                   >
-                    <svg className="size-6" viewBox="0 0 24 24" fill="none" aria-hidden>
+                    <svg className="size-5" viewBox="0 0 24 24" fill="none" aria-hidden>
                       <path d="M20 12H4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                       <path d="M15 17C15 17 20 13.3176 20 12C20 10.6824 15 7 15 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
                 </div>
 
-                <div className="space-y-2.5">
-                  <h3 className="text-[26px] font-bold leading-none" style={{ color: symptom.textColor }}>
+                <div className="space-y-2">
+                  <h3 className="text-[1.05rem] font-bold leading-none" style={{ color: symptom.textColor }}>
                     {symptom.title}
                   </h3>
-                  <p className="text-[16px] font-medium leading-none text-[#8D8D8D]">{symptom.description}</p>
+                  <p className="text-[14px] font-medium leading-none text-[#8D8D8D]">{symptom.description}</p>
                 </div>
               </div>
             </article>
@@ -224,8 +224,8 @@ function DoctorSymptomsSection({ onOpenDoctor }: { onOpenDoctor: () => void }) {
 
 function ConsultationWorksSection() {
   return (
-    <section className="px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-      <div className="mx-auto max-w-[1200px]">
+    <section className="py-10 sm:py-12">
+      <div className="app-container">
         <DoctorSectionHeading
           eyebrow="Quick Services"
           title="How Consultation Works"
@@ -235,7 +235,7 @@ function ConsultationWorksSection() {
         <img
           src={doctorConsultationWorksImage}
           alt="How consultation works"
-          className="h-[260px] w-full rounded-[16px] object-cover sm:h-[320px] lg:h-[380px]"
+          className="h-[190px] w-full rounded-[14px] object-cover sm:h-[240px] lg:h-[270px]"
           loading="lazy"
           decoding="async"
         />
@@ -248,8 +248,8 @@ function DoctorCareServicesSection({ onOpenBookingResults }: { onOpenBookingResu
   const homeCareImage = `${import.meta.env.BASE_URL}quick-service-home.png`
 
   return (
-    <section className="px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-      <div className="mx-auto max-w-[1200px]">
+    <section className="py-12 sm:py-14">
+      <div className="app-container">
         <DoctorSectionHeading
           eyebrow="Quick Services"
           title="More Ways We Care for You"
@@ -259,27 +259,30 @@ function DoctorCareServicesSection({ onOpenBookingResults }: { onOpenBookingResu
           onToggle={() => onOpenBookingResults('doctor')}
         />
 
-        <div className="grid gap-[30px] md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid min-w-0 grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {doctorCareServices.map((service) => (
-            <article key={service.title} className="relative h-[360px] overflow-hidden rounded-[12px] border border-[#E4E4E4] bg-white">
+            <article
+              key={service.title}
+              className="relative max-w-full min-h-[260px] overflow-hidden rounded-[12px] border border-[#E4E4E4] bg-white sm:h-[300px] sm:min-h-[300px]"
+            >
               <div
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-[144px] opacity-20"
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-[120px] opacity-20"
                 style={{
                   background: `linear-gradient(144deg, transparent 0%, transparent 21%, ${service.accentColor} 21%, ${service.accentColor} 100%)`,
                 }}
               />
 
-              <div className="relative z-10 flex h-full flex-col px-3 py-3">
-                <div className="max-w-[254px] space-y-[14px]">
+              <div className="relative z-10 flex h-full flex-col px-3 py-2.5">
+                <div className="max-w-[220px] space-y-3">
                   <div className="space-y-1">
-                    <h3 className="text-[24px] font-black uppercase leading-[1.4] text-[#1F1F1F]">{service.title}</h3>
-                    <p className="text-[18px] font-normal capitalize leading-[1.2] text-[#8D8D8D]">{service.description}</p>
+                    <h3 className="text-[1.05rem] font-black uppercase leading-[1.35] text-[#1F1F1F]">{service.title}</h3>
+                    <p className="text-[15px] font-normal capitalize leading-[1.2] text-[#8D8D8D]">{service.description}</p>
                   </div>
 
                   <button
                     type="button"
                     onClick={() => onOpenBookingResults(service.bookingKind)}
-                    className="inline-flex items-center justify-center rounded-[8px] bg-[#1F1F1F] px-6 py-[14px] text-[16px] font-bold capitalize leading-[1.4] text-white transition hover:bg-[#333538]"
+                    className="inline-flex items-center justify-center rounded-[8px] bg-[#1F1F1F] px-4 py-2.5 text-[0.8125rem] font-bold capitalize leading-[1.4] text-white transition hover:bg-[#333538]"
                   >
                     {service.ctaLabel}
                   </button>
@@ -290,7 +293,7 @@ function DoctorCareServicesSection({ onOpenBookingResults }: { onOpenBookingResu
                     src={homeCareImage}
                     alt=""
                     aria-hidden
-                    className="pointer-events-none absolute left-[113px] top-[166px] h-[212px] w-[175px] object-contain object-bottom"
+                    className="pointer-events-none absolute left-[96px] top-[138px] h-[178px] w-[148px] object-contain object-bottom"
                   />
                 ) : (
                   <img

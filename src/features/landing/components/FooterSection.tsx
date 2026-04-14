@@ -99,21 +99,21 @@ function SocialIcon({ type }: { type: 'linkedin' | 'x' | 'instagram' }) {
 
 export function FooterSection() {
   return (
-    <footer className="px-4 pb-10 pt-8 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-[1380px] rounded-[22px] border border-[#E4E4E4] bg-[#FEFAE7]">
-        <div className="px-6 pt-10 sm:px-10 lg:px-[90px] lg:pt-10">
-          <div className="grid gap-10 md:grid-cols-2 xl:grid-cols-[101px_192px_151px_154px] xl:justify-between">
+    <footer className="pb-8 pt-5">
+      <div className="app-container rounded-[22px] border border-[#E4E4E4] bg-[#FEFAE7]">
+        <div className="px-4 pt-6 sm:px-6 sm:pt-7 lg:px-10 lg:pt-7">
+          <div className="grid gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-4 lg:gap-8 xl:gap-10">
             {footerGroups.map((group) => (
-              <div key={group.title} className="flex flex-col items-start gap-5">
-                <h3 className="text-[22px] font-bold capitalize leading-[1.2] text-[#1F1F1F]">
+              <div key={group.title} className="flex flex-col items-start gap-4">
+                <h3 className="text-[18px] font-bold capitalize leading-[1.2] text-[#1F1F1F]">
                   {group.title}
                 </h3>
-                <div className="flex flex-col items-start gap-[13px]">
+                <div className="flex flex-col items-start gap-[11px]">
                   {group.links.map((link) => (
                     <a
                       key={link}
                       href="#"
-                      className="text-[18px] font-normal capitalize leading-[1.2] text-[#8D8D8D] transition hover:text-[#1F1F1F]"
+                      className="text-[15px] font-normal capitalize leading-[1.2] text-[#8D8D8D] transition hover:text-[#1F1F1F]"
                     >
                       {link}
                     </a>
@@ -123,12 +123,12 @@ export function FooterSection() {
             ))}
           </div>
 
-          <div className="mt-12 flex flex-col gap-8 lg:mt-[51px] lg:flex-row lg:items-end lg:justify-between">
+          <div className="mt-10 flex flex-col gap-7 lg:mt-10 lg:flex-row lg:items-end lg:justify-between">
             <div className="flex flex-wrap items-center gap-3">
               <img
                 src={footerAssets.appStoreBadge}
                 alt="Download on the App Store"
-                className="h-[53px] w-[141px] shrink-0"
+                className="h-[46px] w-[123px] shrink-0"
               />
               <GooglePlayBadge />
             </div>
@@ -139,21 +139,21 @@ export function FooterSection() {
                 <SocialIcon type="x" />
                 <SocialIcon type="instagram" />
               </div>
-              <span className="text-[22px] font-medium leading-[1.2] text-[#8D8D8D]">
+              <span className="text-[18px] font-medium leading-[1.2] text-[#8D8D8D]">
                 @zappiecare
               </span>
             </div>
           </div>
         </div>
 
-        <div className="mt-14 h-px w-full bg-[#E4E4E4]" />
+        <div className="mt-12 h-px w-full bg-[#E4E4E4]" />
 
-        <div className="flex flex-col items-center px-6 pb-10 pt-0 sm:px-10 lg:px-0">
-          <div className="-mt-[53px] flex h-[95px] w-full max-w-[388px] items-center justify-center rounded-[22px] border border-[#E4E4E4] bg-white">
+        <div className="flex flex-col items-center px-6 pb-8 pt-0 sm:px-8 lg:px-0">
+          <div className="-mt-[44px] flex h-[82px] w-full max-w-[340px] items-center justify-center rounded-[20px] border border-[#E4E4E4] bg-white">
             <img
               src={footerAssets.centerLogo}
               alt="ZappieCare"
-              className="h-[66px] w-[321px] max-w-[82%] object-contain"
+              className="h-[56px] w-[280px] max-w-[82%] object-contain"
             />
           </div>
 
@@ -161,7 +161,7 @@ export function FooterSection() {
             src={footerAssets.bottomArtwork}
             alt=""
             aria-hidden
-            className="mt-12 w-full max-w-[851px] object-contain"
+            className="mt-10 w-full max-w-[760px] object-contain"
           />
         </div>
       </div>

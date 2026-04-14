@@ -60,9 +60,9 @@ export function DoctorResults({ heroSearchSnapshot }: Props) {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="space-y-4">
-        <div className="flex flex-wrap items-center gap-2 text-sm font-medium sm:text-base">
+    <div className="app-container space-y-6">
+      <div className="space-y-3">
+        <div className="flex flex-wrap items-center gap-2 text-[0.9rem] font-medium sm:text-[0.95rem]">
           <span className="text-[#F85001]">Home</span>
           <svg className="size-4 text-[#1F1F1F]" viewBox="0 0 20 20" fill="none" aria-hidden>
             <path
@@ -76,23 +76,23 @@ export function DoctorResults({ heroSearchSnapshot }: Props) {
           <span className="text-[#8D8D8D]">Book Doctor</span>
         </div>
 
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex flex-col gap-3.5 lg:flex-row lg:items-end lg:justify-between">
           <div className="min-w-0">
-            <h1 className="text-[clamp(1.9rem,3vw,2.75rem)] font-semibold leading-tight text-black">
+            <h1 className="text-[clamp(1.75rem,2.6vw,2.5rem)] font-semibold leading-tight text-black">
               Explore 300+ Doctors in {bookDoctorExploreCity}
             </h1>
-            <p className="mt-2 text-sm font-medium text-[#656F81] sm:text-base">
+            <p className="mt-1.5 text-[0.92rem] font-medium text-[#656F81] sm:text-[0.98rem]">
               Choose verified doctors, compare consultation options, and book care in minutes.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 lg:justify-end">
-            <label className="flex min-h-10 min-w-0 items-center gap-2 rounded-xl border border-[#B5BAC2] bg-white px-4 text-sm font-medium text-[#5E616E] sm:min-w-[220px]">
+          <div className="flex flex-wrap items-center gap-2.5 lg:justify-end">
+            <label className="flex min-h-9 min-w-0 items-center gap-2 rounded-xl border border-[#B5BAC2] bg-white px-3.5 text-[0.9rem] font-medium text-[#5E616E] sm:min-w-[12.5rem]">
               <span className="shrink-0">Sort by:</span>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="min-h-9 w-full cursor-pointer bg-transparent text-sm font-medium outline-none"
+                className="min-h-8 w-full cursor-pointer bg-transparent text-[0.9rem] font-medium outline-none"
               >
                 {bookDoctorSortOptions.map((o) => (
                   <option key={o} value={o}>
@@ -109,7 +109,7 @@ export function DoctorResults({ heroSearchSnapshot }: Props) {
                   type="button"
                   onClick={() => setViewMode(mode)}
                   className={cn(
-                    'flex h-10 w-10 items-center justify-center rounded-full transition-colors',
+                    'flex h-9 w-9 items-center justify-center rounded-full transition-colors',
                     viewMode === mode
                       ? 'border border-[#1F1F1F] bg-white text-[#1F1F1F]'
                       : 'text-[#8B94A4] hover:bg-[#f7f7f8]',
@@ -170,9 +170,9 @@ export function DoctorResults({ heroSearchSnapshot }: Props) {
         }
       >
         <div
-          className={
-            'grid gap-6 ' + (viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1')
-          }
+          className={cn(
+            viewMode === 'grid' ? 'standard-grid' : 'grid grid-cols-1 gap-5'
+          )}
         >
           {filteredDoctors.map((doctor) =>
             viewMode === 'grid' ? (
@@ -184,19 +184,19 @@ export function DoctorResults({ heroSearchSnapshot }: Props) {
         </div>
       </ServiceResultsBase>
 
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#DDDFE3] bg-white px-5 py-4">
-        <p className="text-sm font-medium text-[#656F81]">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#DDDFE3] bg-white px-4 py-3.5">
+        <p className="text-[0.9rem] font-medium text-[#656F81]">
           Showing <span className="font-semibold text-[#1F1F1F]">{filteredDoctors.length}</span> curated doctor
           listings in {bookDoctorExploreCity}
         </p>
         <div className="inline-flex items-center gap-2">
-          <span className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-[#1F1F1F] bg-[#1F1F1F] px-4 text-sm font-semibold text-white">
+          <span className="inline-flex min-h-9 min-w-9 items-center justify-center rounded-full border border-[#1F1F1F] bg-[#1F1F1F] px-3.5 text-[0.9rem] font-semibold text-white">
             1
           </span>
-          <span className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-[#DDDFE3] px-4 text-sm font-medium text-[#8B94A4]">
+          <span className="inline-flex min-h-9 min-w-9 items-center justify-center rounded-full border border-[#DDDFE3] px-3.5 text-[0.9rem] font-medium text-[#8B94A4]">
             2
           </span>
-          <span className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-[#DDDFE3] px-4 text-sm font-medium text-[#8B94A4]">
+          <span className="inline-flex min-h-9 min-w-9 items-center justify-center rounded-full border border-[#DDDFE3] px-3.5 text-[0.9rem] font-medium text-[#8B94A4]">
             3
           </span>
         </div>

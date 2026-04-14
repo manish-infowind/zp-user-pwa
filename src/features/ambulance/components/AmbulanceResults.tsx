@@ -45,22 +45,23 @@ export function AmbulanceResults({ heroSearchSnapshot }: Props) {
     setAmbulanceDestinationFilter('Any')
   }
 
-  const filterLabel = 'mb-0.5 text-[10px] font-medium uppercase tracking-[0.16em] text-[#9d9d9d] sm:text-[11px] sm:tracking-[0.18em]'
+  const filterLabel = 'mb-0.5 text-[0.625rem] font-medium uppercase tracking-[0.14em] text-[#9d9d9d] sm:text-[0.68rem] sm:tracking-[0.16em]'
 
   return (
-    <ServiceResultsBase
+    <div className="app-container">
+      <ServiceResultsBase
       exploreLine="Explore Ambulances in"
       city="Ahmedabad"
       sidebarContent={
-        <div className="rounded-2xl border border-[#e4e4e4] bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-          <p className="mb-4 text-base font-bold text-[#121316]">Filter ambulances</p>
-          <div className="space-y-4">
+        <div className="rounded-2xl border border-[#e4e4e4] bg-white p-3.5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+          <p className="mb-3 text-[0.95rem] font-semibold text-[#121316]">Filter ambulances</p>
+          <div className="space-y-3">
             <label className="block">
               <span className={filterLabel}>Ambulance type</span>
               <select
                 value={ambulanceTypeFilter}
                 onChange={(e) => setAmbulanceTypeFilter(e.target.value)}
-                className="mt-1.5 w-full rounded-xl border border-[#d9dde3] bg-white px-3 py-2.5 text-sm font-semibold text-[#2b3037] outline-none"
+                className="mt-1.5 w-full rounded-xl border border-[#d9dde3] bg-white px-3 py-2 text-[0.9rem] font-semibold text-[#2b3037] outline-none"
               >
                 <option value="All">All types</option>
                 {ambulanceTypeStripOptions.map((t) => (
@@ -75,7 +76,7 @@ export function AmbulanceResults({ heroSearchSnapshot }: Props) {
               <select
                 value={ambulanceDestinationFilter}
                 onChange={(e) => setAmbulanceDestinationFilter(e.target.value)}
-                className="mt-1.5 w-full rounded-xl border border-[#d9dde3] bg-white px-3 py-2.5 text-sm font-semibold text-[#2b3037] outline-none"
+                className="mt-1.5 w-full rounded-xl border border-[#d9dde3] bg-white px-3 py-2 text-[0.9rem] font-semibold text-[#2b3037] outline-none"
               >
                 {ambulanceDestinationFilterOptions.map((d) => (
                   <option key={d} value={d}>
@@ -87,7 +88,7 @@ export function AmbulanceResults({ heroSearchSnapshot }: Props) {
             <button
               type="button"
               onClick={clearFilters}
-              className="text-sm font-semibold text-[#FC5000] hover:underline"
+              className="text-[0.88rem] font-semibold text-[#FC5000] hover:underline"
             >
               Clear filters
             </button>
@@ -95,11 +96,11 @@ export function AmbulanceResults({ heroSearchSnapshot }: Props) {
         </div>
       }
       topActions={
-        <label className="flex min-h-10 min-w-0 flex-1 items-center gap-2 rounded-full border border-[#d9dde3] bg-white px-3 text-xs font-semibold text-[#5e616e] sm:max-w-[200px]">
+        <label className="flex min-h-9 min-w-0 flex-1 items-center gap-2 rounded-full border border-[#d9dde3] bg-white px-3 text-[0.72rem] font-semibold text-[#5e616e] sm:max-w-[11.5rem]">
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as SortOption)}
-            className="min-h-9 w-full cursor-pointer bg-transparent text-xs font-semibold outline-none sm:text-sm"
+            className="min-h-8 w-full cursor-pointer bg-transparent text-[0.72rem] font-semibold outline-none sm:text-[0.85rem]"
           >
             {bookDoctorSortOptions.map((o) => (
               <option key={o} value={o}>
@@ -110,11 +111,12 @@ export function AmbulanceResults({ heroSearchSnapshot }: Props) {
         </label>
       }
     >
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="standard-grid">
         {filteredAmbulances.map((amb) => (
           <AmbulanceCard key={amb.id} ambulance={amb} />
         ))}
       </div>
-    </ServiceResultsBase>
+      </ServiceResultsBase>
+    </div>
   )
 }

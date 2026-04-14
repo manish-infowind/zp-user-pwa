@@ -11,6 +11,7 @@ import { DoctorLandingSections } from '@/features/doctor/components/DoctorLandin
 import { DoctorHero } from '@/features/doctor/components/DoctorHero'
 import { NurseLandingSections } from '@/features/nurse/components/NurseLandingSections'
 import { NurseHero } from '@/features/nurse/components/NurseHero'
+import { LabLandingSections } from '@/features/labs/components/LabLandingSections'
 import { LabHero } from '@/features/labs/components/LabHero'
 import { Logo } from '@/components/common/Logo'
 import { SearchField } from '@/components/common/SearchField'
@@ -85,6 +86,7 @@ export function LandingPage() {
         : null
   const isDoctorLandingActive = selectedServiceKind === 'doctor' && activeTab === 'doctor'
   const isNurseLandingActive = selectedServiceKind === 'nurse' && activeTab === 'nurse'
+  const isLabLandingActive = selectedServiceKind === 'lab' && activeTab === 'lab'
   const isBookingResultsPageActive = bookingSearchKind !== null
 
   const setFormValue = useCallback(
@@ -180,7 +182,7 @@ export function LandingPage() {
   const heroBottomWaveSrc = isDoctorHeader ? doctorHeroWaveSrc : landingHeroBottomWaveSrc
 
   return (
-    <div className="relative mx-auto min-h-screen w-full max-w-[1440px] overflow-x-clip bg-white text-[#2f2c28]">
+    <div className="relative mx-auto min-h-screen w-full overflow-x-clip bg-white text-[#2f2c28]">
       <span id="profile" className="sr-only">
         Profile
       </span>
@@ -205,7 +207,7 @@ export function LandingPage() {
           aria-hidden
         />
 
-        <header id="home" className="relative z-10 px-4 pb-2 pt-3 sm:px-6 lg:px-8">
+        <header id="home" className="relative z-10 px-3 pb-1 pt-3 sm:px-4 md:px-0">
           <div className="md:hidden">
             <div className="flex items-center justify-between gap-3 rounded-[24px] bg-white/88 px-4 py-3 shadow-[0_18px_40px_rgba(57,46,25,0.08)] backdrop-blur">
               <a href="#home" className="text-inherit no-underline">
@@ -244,11 +246,25 @@ export function LandingPage() {
                 aria-label="Search anything"
               />
             </label>
+
+            {!isDoctorHeader && !isNurseHeader && !isLabHeader ? (
+              <div className="mt-5 px-1 text-center">
+                <p
+                  className="mb-1 text-[clamp(1.25rem,4.5vw,1.65rem)] font-normal normal-case leading-[1.28] text-[#FC5000]"
+                  style={{ fontFamily: 'HolidayFree, Caveat, cursive' }}
+                >
+                  Happie Happie Oye!
+                </p>
+                <h1 className="font-display text-[clamp(1.5rem,5.2vw,2.1rem)] font-bold uppercase leading-[1.15] tracking-[-0.02em] text-[#1F1F1F]">
+                  Because care should feel good.
+                </h1>
+              </div>
+            ) : null}
           </div>
 
           <div className="hidden md:block">
             {useConsultDesktopHeader ? (
-              <div className="mx-auto max-w-[1200px] rounded-[12px] border border-black/[0.03] bg-white/[0.97] px-5 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.06)] backdrop-blur-[2.5px] lg:px-6">
+              <div className="app-container rounded-[12px] border border-black/[0.03] bg-white/[0.97] px-4 py-2.5 shadow-[0_8px_30px_rgba(0,0,0,0.06)] backdrop-blur-[2.5px] lg:px-5">
                 <div className="flex items-center justify-between gap-4">
                   <a href="#home" className="shrink-0 text-inherit no-underline">
                     <img
@@ -261,7 +277,7 @@ export function LandingPage() {
                       className="h-[43px] w-auto max-w-[209px] object-contain"
                     />
                   </a>
-                  <nav className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2 text-base font-normal text-[#1F1F1F]" aria-label="Primary">
+                  <nav className="flex flex-wrap items-center justify-end gap-x-5 gap-y-2 text-[0.95rem] font-normal text-[#1F1F1F]" aria-label="Primary">
                     <a href="#services" className="inline-flex items-center gap-1.5 no-underline hover:opacity-80">
                       <svg className="size-[18px] shrink-0" viewBox="0 0 18 18" fill="none" aria-hidden>
                         <path
@@ -310,12 +326,12 @@ export function LandingPage() {
                 </div>
               </div>
             ) : (
-              <div className="mx-auto rounded-full border border-white/80 bg-white/92 px-5 py-3 shadow-[0_20px_50px_rgba(57,46,25,0.08)] backdrop-blur lg:px-6">
-                <div className="flex items-center justify-between gap-6">
+              <div className="app-container rounded-full border border-white/80 bg-white/92 px-4 py-2 shadow-[0_20px_50px_rgba(57,46,25,0.08)] backdrop-blur lg:px-4.5">
+                <div className="flex items-center justify-between gap-5">
                   <a href="#home" className="text-inherit no-underline">
                     <Logo />
                   </a>
-                  <nav className="flex items-center gap-6 text-sm font-semibold text-[#7f7363]" aria-label="Primary">
+                  <nav className="flex items-center gap-5 text-[0.9rem] font-semibold text-[#7f7363]" aria-label="Primary">
                     <a href="#services" className="no-underline transition hover:text-[#2f2c28]">
                       Services
                     </a>
@@ -336,31 +352,36 @@ export function LandingPage() {
               </div>
             )}
 
-            {!useConsultDesktopHeader ? (
-              <div className="px-4 pb-4 pt-6 text-center lg:px-12">
+            {!isDoctorHeader && !isNurseHeader && !isLabHeader ? (
+              <div className="app-container px-0 pb-3 pt-3 text-center">
                 <p
-                  className="mb-1 text-[clamp(2rem,4.5vw,2.875rem)] font-normal normal-case leading-[1.42] text-[#FC5000]"
+                  className="mb-1 text-[clamp(1.45rem,2.6vw,2rem)] font-normal normal-case leading-[1.28] text-[#FC5000]"
                   style={{ fontFamily: 'HolidayFree, Caveat, cursive' }}
                 >
                   Happie Happie Oye!
                 </p>
-                <h1 className="mx-auto max-w-4xl font-display text-[clamp(2.75rem,5vw,4rem)] font-bold uppercase leading-[1.42] tracking-[-0.02em] text-[#1F1F1F]">
+                <h1 className="mx-auto content-width font-display text-[clamp(1.85rem,3.2vw,2.65rem)] font-bold uppercase leading-[1.18] tracking-[-0.02em] text-[#1F1F1F]">
                   Because care should feel good.
                 </h1>
               </div>
             ) : (
-              <div className="pb-2 pt-4 lg:pt-6" aria-hidden />
+              <div className="pb-1 pt-3 lg:pt-4" aria-hidden />
             )}
-
+          </div>
 
             <div
               id="booking"
               className={cn(
-                'mx-auto max-w-[1180px] rounded-[34px] border p-4 shadow-[0_30px_60px_rgba(57,46,25,0.08)] backdrop-blur lg:p-5',
+                'app-container mt-3 rounded-[18px] border p-2 shadow-[0_22px_42px_rgba(57,46,25,0.08)] backdrop-blur sm:rounded-[20px] sm:p-2.5 md:mt-0 md:rounded-[22px] md:p-3',
                 isDoctorHeader || isNurseHeader || isLabHeader ? 'border-white/60 bg-white/95' : 'border-white/80 bg-white/92',
               )}
             >
-              <div className={cn('flex flex-wrap gap-2', consultTabTheme && 'rounded-t-2xl bg-[#ececec] p-2')}>
+              <div
+                className={cn(
+                  'flex flex-wrap gap-1.5 sm:gap-2',
+                  consultTabTheme && 'rounded-t-xl bg-[#ececec] p-1.5 sm:rounded-t-2xl sm:p-2',
+                )}
+              >
                 {searchTabs.map((tab) => {
                   const selected = selectedServiceKind === tab.kind
                   const theme = consultTabTheme
@@ -370,7 +391,7 @@ export function LandingPage() {
                       type="button"
                       onClick={() => selectBookingTab(tab.kind)}
                       className={cn(
-                        'min-h-11 rounded-2xl px-4 text-sm font-bold transition',
+                        'min-h-9 flex-1 basis-[calc(50%-0.25rem)] rounded-lg px-2.5 text-[0.7rem] font-bold transition sm:min-h-10 sm:basis-auto sm:flex-none sm:rounded-xl sm:px-3.5 sm:text-[0.8125rem]',
                         selected
                           ? theme === 'doctor'
                             ? 'bg-[#F8BFE3] text-[#9D497E] shadow-[0_8px_20px_rgba(248,191,227,0.45)]'
@@ -409,7 +430,7 @@ export function LandingPage() {
                   onBookNow={() => openBookingResults('lab')}
                 />
               ) : (
-                <div className="mt-3 grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:mt-4 lg:grid-cols-[1fr_1fr_1fr_auto] lg:gap-3">
+                <div className="mt-3 grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 lg:mt-3 lg:grid-cols-[1fr_1fr_1fr_auto] lg:gap-3">
                   {activeConfig.fields.map((field) => (
                     <SearchField
                       key={field.key}
@@ -423,14 +444,13 @@ export function LandingPage() {
                   <button
                     type="button"
                     onClick={() => openBookingResults(activeTab)}
-                    className="grid min-h-[64px] place-items-center rounded-2xl bg-[#FC5000] px-8 text-lg font-bold text-white shadow-[0_12px_24px_rgba(252,80,0,0.25)] transition hover:bg-[#e04a00] active:scale-[0.98] [touch-action:manipulation]"
+                      className="grid min-h-[50px] place-items-center rounded-xl bg-[#FC5000] px-5 text-sm font-bold text-white shadow-[0_12px_24px_rgba(252,80,0,0.25)] transition hover:bg-[#e04a00] active:scale-[0.98] sm:min-h-[52px] sm:rounded-2xl sm:px-7 sm:text-base [touch-action:manipulation]"
                   >
                     Search
                   </button>
                 </div>
               )}
             </div>
-          </div>
           <div className="relative -mt-1 lg:-mt-2">
             <img
               src={heroBottomWaveSrc}
@@ -455,25 +475,29 @@ export function LandingPage() {
         <NurseLandingSections
           onOpenBookingResults={openBookingResults}
         />
+      ) : isLabLandingActive ? (
+        <LabLandingSections
+          onOpenBookingResults={openBookingResults}
+        />
       ) : (
         <div className="bg-white">
-          <section id="services" className="relative z-10 px-4 pb-20 pt-10 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-[1240px]">
-              <div className="mb-8 flex flex-wrap items-end justify-between gap-6 md:mb-12">
+          <section id="services" className="relative z-10 pb-10 pt-5 md:pb-11 md:pt-6">
+            <div className="app-container">
+              <div className="mb-6 flex flex-wrap items-end justify-between gap-4 md:mb-7">
                 <div>
                   <p
-                    className="mb-1 text-[clamp(1.75rem,4vw,2.5rem)] font-normal normal-case leading-none text-[#FC5000]"
+                    className="mb-1 text-[clamp(1.2rem,2.2vw,1.65rem)] font-normal normal-case leading-none text-[#FC5000]"
                     style={{ fontFamily: 'HolidayFree, Caveat, cursive' }}
                   >
                     Quick Services
                   </p>
-                  <h2 className="max-w-2xl font-display text-[clamp(2.5rem,5.5vw,4.5rem)] font-bold uppercase leading-[0.9] tracking-[-0.01em] text-[#1F1F1F]">
+                  <h2 className="max-w-2xl font-display text-[clamp(1.55rem,3vw,2.35rem)] font-bold uppercase leading-[0.98] tracking-[-0.01em] text-[#1F1F1F]">
                     Book what you need in one tap.
                   </h2>
                 </div>
                 <a
                   href="#booking-results"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#E5E7EB] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-[#5a5248] transition hover:bg-[#D1D5DB]"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#E5E7EB] px-4 py-2 text-[0.6875rem] font-bold uppercase tracking-wider text-[#5a5248] transition hover:bg-[#D1D5DB]"
                 >
                   View More
                   <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
@@ -482,20 +506,20 @@ export function LandingPage() {
                 </a>
               </div>
 
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {quickServices.map((service) => (
                   <div
                     key={service.title}
                     onClick={() => service.kind && openBookingResults(service.kind)}
-                    className="group relative flex min-h-[440px] cursor-pointer flex-col overflow-hidden rounded-[40px] border-2 border-transparent bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)] transition-all hover:-translate-y-2 hover:border-[#FC5000]/10 hover:shadow-[0_40px_80px_rgba(0,0,0,0.1)] active:scale-[0.98]"
+                    className="group relative flex min-h-[248px] cursor-pointer flex-col overflow-hidden rounded-[20px] border-2 border-transparent bg-white shadow-[0_14px_32px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-1 hover:border-[#FC5000]/10 hover:shadow-[0_22px_44px_rgba(0,0,0,0.08)] active:scale-[0.98] sm:min-h-[268px] md:min-h-[280px]"
                   >
-                    <div className="flex flex-1 flex-col p-8">
-                      <h3 className="text-2xl font-black uppercase text-[#121316]">{service.title}</h3>
-                      <p className="mt-2.5 max-w-[200px] text-[15px] font-medium leading-relaxed text-[#7e828a]">
+                    <div className="flex flex-1 flex-col p-4">
+                      <h3 className="text-[1.05rem] font-black uppercase text-[#121316]">{service.title}</h3>
+                      <p className="mt-1.5 max-w-[190px] text-[13px] font-medium leading-relaxed text-[#7e828a]">
                         {service.description}
                       </p>
-                      <div className="mt-6">
-                        <button className="rounded-xl bg-[#1d1e20] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#333538]">
+                      <div className="mt-4">
+                        <button className="rounded-lg bg-[#1d1e20] px-4 py-2 text-[0.8125rem] font-bold text-white transition hover:bg-[#333538]">
                           Book Now
                         </button>
                       </div>
@@ -513,28 +537,28 @@ export function LandingPage() {
             </div>
           </section>
 
-          <section id="trust" className="px-4 py-20 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-[1240px]">
-              <div className="mb-14 text-center">
-                <h2 className="mb-1 font-display text-[clamp(2.5rem,5.5vw,4.5rem)] font-bold uppercase leading-none tracking-tight text-[#2D5FB4]">
+          <section id="trust" className="py-10 md:py-11">
+            <div className="app-container">
+              <div className="mb-8 text-center md:mb-9">
+                <h2 className="mb-1 font-display text-[clamp(1.55rem,3vw,2.35rem)] font-bold uppercase leading-none tracking-tight text-[#2D5FB4]">
                   Why Trust ZappieCare?
                 </h2>
-                <p className="mx-auto max-w-2xl text-base font-medium leading-relaxed text-[#7e828a] sm:text-lg">
+                <p className="mx-auto max-w-2xl text-[14px] font-medium leading-relaxed text-[#7e828a] sm:text-[15px]">
                   {trustIntro}
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-4 lg:gap-x-12">
+              <div className="grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-4 md:gap-x-7 md:gap-y-9">
                 {trustHighlights.map((hl, idx) => (
                   <div key={idx} className="flex flex-col items-center text-center">
-                    <div className="mb-6 flex aspect-square w-full max-w-[120px] items-center justify-center sm:max-w-none">
+                    <div className="mb-4 flex aspect-square w-full max-w-[88px] items-center justify-center sm:max-w-[92px]">
                       <img src={hl.image} alt="" className="size-full object-contain" />
                     </div>
                     <div className="space-y-1">
                       {hl.title && (
-                        <p className="text-2xl font-black text-[#1F1F1F] sm:text-3xl">{hl.title}</p>
+                        <p className="text-[1.2rem] font-black text-[#1F1F1F] sm:text-[1.35rem]">{hl.title}</p>
                       )}
-                      <p className="mx-auto max-w-[160px] text-base font-bold leading-tight text-[#1F1F1F]">
+                      <p className="mx-auto max-w-[150px] text-[13px] font-bold leading-tight text-[#1F1F1F] sm:text-[14px]">
                         {hl.subtitle}
                       </p>
                     </div>

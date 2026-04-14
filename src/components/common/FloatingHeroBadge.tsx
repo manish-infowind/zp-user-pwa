@@ -3,7 +3,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import { cn } from '@/utils/cn'
 
 const pillBase =
-  'pointer-events-none absolute z-20 inline-flex h-[39px] max-w-[calc(100%-1rem)] items-center justify-center rounded-[63px] border border-white/50 bg-white/25 px-2.5 text-center text-[11px] font-bold text-white shadow-[4px_4px_20px_rgba(0,0,0,0.1)] backdrop-blur-[24px] sm:px-3 sm:text-sm md:text-[20px]'
+  'pointer-events-none absolute z-20 inline-flex h-[1.85rem] max-w-[calc(100%-1rem)] items-center justify-center rounded-[3.5rem] border border-white/50 bg-white/25 px-2.5 text-center text-[0.625rem] font-semibold text-white shadow-[4px_4px_20px_rgba(0,0,0,0.1)] backdrop-blur-[24px] sm:px-3 sm:text-[0.7rem] md:text-[0.78rem]'
 
 type FloatingHeroBadgeProps = {
   children: ReactNode

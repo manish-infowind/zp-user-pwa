@@ -64,7 +64,8 @@ export function NurseResults({ heroSearchSnapshot }: Props) {
   }
 
   return (
-    <ServiceResultsBase
+    <div className="app-container">
+      <ServiceResultsBase
       exploreLine="Explore Nurses in"
       city="Ahmedabad"
       sidebarContent={
@@ -90,11 +91,11 @@ export function NurseResults({ heroSearchSnapshot }: Props) {
       }
       topActions={
         <>
-          <label className="flex min-h-10 min-w-0 flex-1 items-center gap-2 rounded-full border border-[#d9dde3] bg-white px-3 text-xs font-semibold text-[#5e616e] sm:max-w-[200px]">
+          <label className="flex min-h-9 min-w-0 flex-1 items-center gap-2 rounded-full border border-[#d9dde3] bg-white px-3 text-[0.72rem] font-semibold text-[#5e616e] sm:max-w-[11.5rem]">
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="min-h-9 w-full cursor-pointer bg-transparent text-xs font-semibold outline-none sm:text-sm"
+              className="min-h-8 w-full cursor-pointer bg-transparent text-[0.72rem] font-semibold outline-none sm:text-[0.85rem]"
             >
               {bookDoctorSortOptions.map((o) => (
                 <option key={o} value={o}>
@@ -110,7 +111,7 @@ export function NurseResults({ heroSearchSnapshot }: Props) {
                 type="button"
                 onClick={() => setViewMode(mode)}
                 className={cn(
-                  'flex h-8 w-10 items-center justify-center rounded-full transition-colors',
+                  'flex h-8 w-9 items-center justify-center rounded-full transition-colors',
                   viewMode === mode ? 'bg-[#9d497e] text-white' : 'text-[#5e616e] hover:bg-[#f1f2f3]',
                 )}
               >
@@ -129,7 +130,7 @@ export function NurseResults({ heroSearchSnapshot }: Props) {
         </>
       }
     >
-      <div className={cn('grid gap-6', viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1')}>
+      <div className={cn(viewMode === 'grid' ? 'standard-grid' : 'grid grid-cols-1 gap-5')}>
         {filteredNurses.map((nurse) =>
           viewMode === 'grid' ? (
             <DoctorCardGrid key={nurse.name} doctor={nurse as any} />
@@ -138,6 +139,7 @@ export function NurseResults({ heroSearchSnapshot }: Props) {
           ),
         )}
       </div>
-    </ServiceResultsBase>
+      </ServiceResultsBase>
+    </div>
   )
 }

@@ -2,7 +2,7 @@ import { LandingPage } from '@/features/landing'
 
 function App() {
   return (
-    <div className="min-h-screen min-h-[100dvh] w-full">
+    <div className="min-h-screen w-full">
       <LandingPage />
     </div>
   )

@@ -10,7 +10,7 @@ export const nurseHomecareCategories = [
     bgColor: '#DDEDF9',
     shadowColor: '#7FB0D5',
     image: 'https://api.builder.io/api/v1/image/assets/TEMP/a8ab184875c60b4eb9b614988ad68af3466bc254?width=292',
-    imageClassName: 'h-[230px] w-[146px] object-contain',
+    imageClassName: 'h-[182px] w-[116px] object-contain',
     artVariant: 'image',
   },
   {
@@ -21,7 +21,7 @@ export const nurseHomecareCategories = [
     bgColor: '#FFE1F5',
     shadowColor: '#9D497E',
     image: 'https://api.builder.io/api/v1/image/assets/TEMP/a3f428883523a4b8428d89d3baf69eed41242387?width=276',
-    imageClassName: 'h-[230px] w-[138px] object-contain',
+    imageClassName: 'h-[182px] w-[110px] object-contain',
     artVariant: 'image',
   },
   {
@@ -32,7 +32,7 @@ export const nurseHomecareCategories = [
     bgColor: '#FFE9C9',
     shadowColor: '#DA9D9D',
     image: 'https://api.builder.io/api/v1/image/assets/TEMP/fb8e93d96f846bbd59f75770505ee33c9f359ece?width=492',
-    imageClassName: 'h-[230px] w-[246px] object-contain',
+    imageClassName: 'h-[182px] w-[194px] object-contain',
     artVariant: 'image',
   },
   {
@@ -44,6 +44,21 @@ export const nurseHomecareCategories = [
     shadowColor: '#007954',
     artVariant: 'physio',
   },
+] as const
+
+export const expandedNurseHomecareCategories = [
+  nurseHomecareCategories[0],
+  nurseHomecareCategories[1],
+  nurseHomecareCategories[2],
+  nurseHomecareCategories[3],
+  nurseHomecareCategories[1],
+  nurseHomecareCategories[0],
+  nurseHomecareCategories[3],
+  nurseHomecareCategories[2],
+  nurseHomecareCategories[2],
+  nurseHomecareCategories[3],
+  nurseHomecareCategories[0],
+  nurseHomecareCategories[1],
 ] as const
 
 const nurseSymptomTones = {
